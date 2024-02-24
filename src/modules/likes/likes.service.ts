@@ -3,7 +3,7 @@ import { CreateLikeDto } from './dto/create-like.dto';
 import { UpdateLikeDto } from './dto/update-like.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Likes } from 'src/schemas/likes.schemas';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 @Injectable()
 export class LikesService {
@@ -20,15 +20,15 @@ export class LikesService {
     return this.likeModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} like`;
+  findOne(id: ObjectId) {
+    return this.likeModel.findById(id);
   }
 
-  update(id: number, updateLikeDto: UpdateLikeDto) {
-    return `This action updates a #${id} like`;
+  update(id: ObjectId, updateLikeDto: UpdateLikeDto) {
+    return this.likeModel.findByIdAndUpdate(id, updateLikeDto, { new: true })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} like`;
+  remove(id: ObjectId) {
+    return this.likeModel.findByIdAndDelete(id);
   }
 }

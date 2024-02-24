@@ -19,16 +19,16 @@ export class PlaylistsVideosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.playlistsVideosService.findOne(+id);
+    return this.playlistsVideosService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
-    return this.playlistsVideosService.update(+id, updatePlaylistsVideoDto);
+    return this.playlistsVideosService.update(id, updatePlaylistsVideoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.playlistsVideosService.remove(+id);
+    return this.playlistsVideosService.remove(id);
   }
 }

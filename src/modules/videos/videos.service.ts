@@ -3,7 +3,7 @@ import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Video } from './entities/video.entity';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 @Injectable()
 export class VideosService {
@@ -14,28 +14,25 @@ export class VideosService {
     @InjectModel(Video.name) private videoModel: Model<Video>,
 
 
-  ) {}
+  ) { }
 
   create(createVideoDto: CreateVideoDto) {
-    return 'This action adds a new video';
+    return this.videoModel.create(createVideoDto);
   }
 
   findAll() {
-
-    
     return this.videoModel.find();
+  }
+  findOne(id: ObjectId) {
 
+    return this.videoModel.findById(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} video`;
+  update(id: ObjectId, updateVideoDto: UpdateVideoDto) {
+    return this.videoModel.findByIdAndUpdate(id, updateVideoDto, { new: true });
   }
 
-  update(id: number, updateVideoDto: UpdateVideoDto) {
-    return `This action updates a #${id} video`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} video`;
+  remove(id: ObjectId) {
+    return this.videoModel.findByIdAndDelete(id);
   }
 }

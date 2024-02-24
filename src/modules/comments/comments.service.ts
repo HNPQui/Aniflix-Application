@@ -20,14 +20,14 @@ export class CommentsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} comment`;
+    return this.commentModel.findById(id);
   }
 
   update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+    return this.commentModel.findByIdAndUpdate(id, updateCommentDto, { new: true });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} comment`;
+    return this.commentModel.findByIdAndDelete(id);
   }
 }

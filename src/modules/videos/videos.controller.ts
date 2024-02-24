@@ -10,6 +10,7 @@ export class VideosController {
   @Post()
   create(@Body() createVideoDto: CreateVideoDto) {
     return this.videosService.create(createVideoDto);
+
   }
 
   @Get()
@@ -19,16 +20,17 @@ export class VideosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.videosService.findOne(+id);
+    
+    return this.videosService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto) {
-    return this.videosService.update(+id, updateVideoDto);
+    return this.videosService.update(id, updateVideoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.videosService.remove(+id);
+    return this.videosService.remove(id);
   }
 }

@@ -21,14 +21,14 @@ export class CategoriesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} category`;
+    return this.categoryModel.findById(id);
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+    return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, { new: true });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} category`;
+    return this.categoryModel.findByIdAndDelete(id);
   }
 }

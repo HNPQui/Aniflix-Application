@@ -20,14 +20,14 @@ export class HistoriesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} history`;
+    return this.historyModel.findById(id);
   }
 
   update(id: number, updateHistoryDto: UpdateHistoryDto) {
-    return `This action updates a #${id} history`;
+    return this.historyModel.findByIdAndUpdate(id, updateHistoryDto, { new: true });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} history`;
+    return this.historyModel.findByIdAndDelete(id);
   }
 }

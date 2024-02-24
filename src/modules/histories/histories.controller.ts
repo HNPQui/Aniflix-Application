@@ -19,16 +19,16 @@ export class HistoriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.historiesService.findOne(+id);
+    return this.historiesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHistoryDto: UpdateHistoryDto) {
-    return this.historiesService.update(+id, updateHistoryDto);
+    return this.historiesService.update(id, updateHistoryDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.historiesService.remove(+id);
+    return this.historiesService.remove(id);
   }
 }
