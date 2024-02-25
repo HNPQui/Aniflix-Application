@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { UpdateLikeDto } from './dto/update-like.dto';
+import { ObjectId } from 'mongoose';
 
 @Controller('likes')
 export class LikesController {
@@ -18,17 +19,17 @@ export class LikesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: ObjectId) {
     return this.likesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLikeDto: UpdateLikeDto) {
+  update(@Param('id') id: ObjectId, @Body() updateLikeDto: UpdateLikeDto) {
     return this.likesService.update(id, updateLikeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: ObjectId) {
     return this.likesService.remove(id);
   }
 }

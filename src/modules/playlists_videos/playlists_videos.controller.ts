@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PlaylistsVideosService } from './playlists_videos.service';
 import { CreatePlaylistsVideoDto } from './dto/create-playlists_video.dto';
 import { UpdatePlaylistsVideoDto } from './dto/update-playlists_video.dto';
+import { ObjectId } from 'mongoose';
 
 @Controller('playlists-videos')
 export class PlaylistsVideosController {
@@ -18,17 +19,17 @@ export class PlaylistsVideosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: ObjectId) {
     return this.playlistsVideosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
+  update(@Param('id') id: ObjectId, @Body() updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
     return this.playlistsVideosService.update(id, updatePlaylistsVideoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: ObjectId) {
     return this.playlistsVideosService.remove(id);
   }
 }

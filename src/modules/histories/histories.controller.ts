@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { HistoriesService } from './histories.service';
 import { CreateHistoryDto } from './dto/create-history.dto';
 import { UpdateHistoryDto } from './dto/update-history.dto';
+import { ObjectId } from 'mongoose';
 
 @Controller('histories')
 export class HistoriesController {
@@ -18,17 +19,17 @@ export class HistoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: ObjectId) {
     return this.historiesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHistoryDto: UpdateHistoryDto) {
+  update(@Param('id') id: ObjectId, @Body() updateHistoryDto: UpdateHistoryDto) {
     return this.historiesService.update(id, updateHistoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: ObjectId) {
     return this.historiesService.remove(id);
   }
 }

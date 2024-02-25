@@ -19,15 +19,15 @@ export class CommentsService {
     return this.commentModel.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.commentModel.findById(id);
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
+  update(id: string, updateCommentDto: UpdateCommentDto) {
     return this.commentModel.findByIdAndUpdate(id, updateCommentDto, { new: true });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.commentModel.findByIdAndDelete(id);
   }
 }
