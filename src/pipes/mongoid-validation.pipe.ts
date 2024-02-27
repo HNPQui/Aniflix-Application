@@ -4,7 +4,6 @@ import { Types } from "mongoose";
 @Injectable()
 export class ValidateMongoIdPipe implements PipeTransform<string, Types.ObjectId> {
     transform(value: string, metadata: ArgumentMetadata): Types.ObjectId {
-        console.log({ metadata })
         if (Types.ObjectId.isValid(value) === false) {
             throw new BadRequestException('Invalid ObjectId');
         }
