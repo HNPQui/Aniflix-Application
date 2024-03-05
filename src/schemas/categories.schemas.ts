@@ -10,8 +10,10 @@ export class Categories {
 
     @Prop()
     title: string;
+    
     @Prop()
     name: string;
+
     @Prop()
     priority: number;
 

@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { User } from './user.schema';
+import { Video } from 'src/modules/videos/entities/video.entity';
 
 export type CommentsDocument = HydratedDocument<Comments>;
 
@@ -10,15 +12,25 @@ export class Comments {
 
     @Prop()
     title: string;
+
+    @Prop({
+        type: Types.ObjectId,
+        ref: User.name
+    })
+    user_id: User;
+
+    @Prop({
+        type: Types.ObjectId,
+        ref: Video.name
+    })
+    video_id: Video;
     @Prop()
-    user_id: string;
-    @Prop()
-    video_id: string;
-    @Prop()
+
     content: string;
+
     @Prop()
     status: string;
-   
-    
+
+
 }
 export const CommentsSchema = SchemaFactory.createForClass(Comments);

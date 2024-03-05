@@ -10,14 +10,19 @@ export class Videos {
 
     @Prop()
     title: string;
+
     @Prop()
     description: string;
+
     @Prop()
     like_count: number;
+
     @Prop()
     categories_id: string;
+
     @Prop()
     author: string;
+    
     @Prop()
     status: string;
 
