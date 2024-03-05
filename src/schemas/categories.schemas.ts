@@ -14,6 +14,10 @@ export class Categories {
     name: string;
     @Prop()
     priority: number;
+    @Prop()
+    status: string;
+   
+    
 
     
 }

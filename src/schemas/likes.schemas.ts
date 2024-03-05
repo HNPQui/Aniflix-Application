@@ -14,6 +14,13 @@ export class Likes {
     video_Id: string;
     @Prop()
     user_Id: string;
+    @Prop()
+    status: string;
+    @Prop()
+    type: string;
+    
+    
+    
     
     
 }

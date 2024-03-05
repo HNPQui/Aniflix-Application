@@ -20,6 +20,12 @@ export class Videos {
     author: string;
     @Prop()
     status: string;
+    @Prop()
+    thumbnail: string;
+    
+    
+    
+    
 
     @Prop({ type: Date, default: Date.now })
     deletedAt: Date;

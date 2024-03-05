@@ -7,11 +7,16 @@ export type PlaylistsDocument = HydratedDocument<Playlists>;
 export class Playlists {
 
     _id: Types.ObjectId;
-
     @Prop()
     title: string;
     @Prop()
     user_id: string;
+    @Prop()
+    description: string;
+    @Prop()
+    tracks: string[];
+    
+
    
     
 }

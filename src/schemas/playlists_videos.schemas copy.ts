@@ -16,6 +16,13 @@ export class Playlists_videos {
     video_id: string;
     @Prop()
     position: number;
+    @Prop()
+    status: string;
+    @Prop()
+    duration: string;
+    @Prop()
+    thumbnail: string;
+
     
 }
 export const Playlists_videosSchema = SchemaFactory.createForClass(Playlists_videos);

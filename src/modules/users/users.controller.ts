@@ -31,12 +31,13 @@ export class UsersController {
   findOne(@Param('id', ValidateMongoIdPipe) id: ObjectId) {
     return this.usersService.findOne(id);
   }
+  @HasRoles(Role.ADMIN, Role.USER)
 
   @Patch(':id')
   update(@Param('id', ValidateMongoIdPipe) id: ObjectId, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
-
+  @HasRoles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id', ValidateMongoIdPipe) id: ObjectId) {
     return this.usersService.remove(id);

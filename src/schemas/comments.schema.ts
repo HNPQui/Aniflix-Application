@@ -18,6 +18,13 @@ export class Comments {
     content: string;
     @Prop()
     status: string;
+    @Prop()
+    likes: number;
+    @Prop()
+    dislikes: number;
+    @Prop()
+    replies: number;
+    
    
     
 }
