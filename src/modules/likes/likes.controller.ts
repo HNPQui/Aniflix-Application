@@ -11,6 +11,7 @@ import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 export class LikesController {
   constructor(private readonly likesService: LikesService) { }
 
+  @HasRoles(Role.USER)
   @Post()
   @HasRoles(Role.USER)
   create(@Request() req, @Body() createLikeDto: CreateLikeDto) {
@@ -30,12 +31,12 @@ export class LikesController {
     console.log(req.user);
     return this.likesService.findAll(req.user['sub']);
   }
-
+  @HasRoles(Role.USER, Role.ADMIN)
   @Patch(':id')
   update(@Param('id') id: Types.ObjectId, @Body() updateLikeDto: UpdateLikeDto) {
     return this.likesService.update(id, updateLikeDto);
   }
-
+ @HasRoles(Role.USER)
   @Delete(':id')
   remove(@Param('id') id: Types.ObjectId) {
     return this.likesService.remove(id);

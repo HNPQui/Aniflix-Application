@@ -3,6 +3,9 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ObjectId } from 'mongoose';
+import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { HasRoles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('categories')
 export class CategoriesController {
@@ -19,15 +22,15 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: ObjectId) {
+  findOne(@Param('id',ValidateMongoIdPipe) id: ObjectId) {
     return this.categoriesService.findOne(id);
   }
-
+  @HasRoles(Role.USER, Role.ADMIN)
   @Patch(':id')
   update(@Param('id') id: ObjectId, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(id, updateCategoryDto);
   }
-
+  @HasRoles(Role.USER)
   @Delete(':id')
   remove(@Param('id') id: ObjectId) {
     return this.categoriesService.remove(id);
