@@ -28,6 +28,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             exception instanceof HttpException
                 ? exception.message
                 : 'Internal Server Errorz';
+                console.log(exception);
         const responseBody : Response<string> = {
             data: httpMessage,
             statusCode: httpStatus

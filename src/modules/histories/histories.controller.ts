@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { HistoriesService } from './histories.service';
 import { CreateHistoryDto } from './dto/create-history.dto';
 import { UpdateHistoryDto } from './dto/update-history.dto';
 import { ObjectId } from 'mongoose';
+import { HasRoles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('histories')
 export class HistoriesController {
@@ -12,10 +14,11 @@ export class HistoriesController {
   create(@Body() createHistoryDto: CreateHistoryDto) {
     return this.historiesService.create(createHistoryDto);
   }
-
+  
+  @HasRoles(Role.USER)
   @Get()
-  findAll() {
-    return this.historiesService.findAll();
+  findAll(@Request() req) {
+    return this.historiesService.findAll(req.user.sub);
   }
 
   @Get(':id')

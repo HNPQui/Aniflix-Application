@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Categories } from 'src/schemas/categories.schemas';
+import { Category } from 'src/schemas/category.schema';
 import { Model, ObjectId } from 'mongoose';
 
 @Injectable()
 export class CategoriesService {
 
   constructor(
-    @InjectModel(Categories.name) private categoryModel: Model<Categories>,
+    @InjectModel(Category.name) private categoryModel: Model<Category>,
 
   ) {}
   create(createCategoryDto: CreateCategoryDto) {
@@ -17,7 +17,7 @@ export class CategoriesService {
   }
 
   findAll() {
-    return this.categoryModel.find();
+    return this.categoryModel.find().select("_id").exec();
   }
 
   findOne(id: ObjectId) {

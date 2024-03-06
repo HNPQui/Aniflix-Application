@@ -1,20 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type HistoriesDocument = HydratedDocument<Histories>;
+export type PlaylistDocument = HydratedDocument<Playlist>;
 
 @Schema({ versionKey: false, timestamps: true})
-export class Histories {
+export class Playlist {
 
     _id: Types.ObjectId;
 
     @Prop()
     title: string;
-    @Prop()
-    video_id: string;
+
     @Prop()
     user_id: string;
-   
     
 }
-export const HistoriesSchema = SchemaFactory.createForClass(Histories);
+export const PlaylistSchema = SchemaFactory.createForClass(Playlist);

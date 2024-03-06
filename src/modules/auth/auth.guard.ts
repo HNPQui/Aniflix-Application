@@ -1,6 +1,7 @@
 import {
     ExecutionContext,
     Injectable,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,14 +22,19 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
             return true;
         }
         const { user } = context.switchToHttp().getRequest();
-        return requiredRoles.some((role) => user?.roles?.includes(role));
+        //extract token from header
+        const token = context.switchToHttp().getRequest().headers['authorization'];
+        console.log('token', token)
+        console.log('user', user, 'requiredRoles', requiredRoles)
+        // return requiredRoles.some((role) => user?.roles?.includes(role));
+        return super.canActivate(context);
     }
 
-    // handleRequest(err, user, info) {
-    //     // You can throw an exception based on either "info" or "err" arguments
-    //     if (err || !user) {
-    //         throw err || new UnauthorizedException();
-    //     }
-    //     return user;
-    // }
+    handleRequest(err, user, info) {
+        // You can throw an exception based on either "info" or "err" arguments
+        if (err || !user) {
+            throw err || new UnauthorizedException("You don't have access to this resource");
+        }
+        return user;
+    }
 }

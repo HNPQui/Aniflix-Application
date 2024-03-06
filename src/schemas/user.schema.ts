@@ -21,7 +21,7 @@ export class User {
     email: string;
 
     @Prop({
-        type: [String],
+        type: String,
         enum: Role,
     })
     role: Role;

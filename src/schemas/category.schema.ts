@@ -1,22 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type CategoriesDocument = HydratedDocument<Categories>;
+export type CategoryDocument = HydratedDocument<Category>;
 
 @Schema({ versionKey: false })
-export class Categories {
+export class Category {
 
     _id: Types.ObjectId;
 
-    @Prop()
-    title: string;
-    
     @Prop()
     name: string;
 
     @Prop()
     priority: number;
-
-    
 }
-export const CategoriesSchema = SchemaFactory.createForClass(Categories);
+export const CategorySchema = SchemaFactory.createForClass(Category);

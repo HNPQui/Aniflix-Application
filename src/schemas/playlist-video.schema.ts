@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type Playlists_videosDocument = HydratedDocument<Playlists_videos>;
+export type PlaylistVideosDocument = HydratedDocument<PlaylistVideos>;
 
 @Schema({ versionKey: false })
-export class Playlists_videos {
+export class PlaylistVideos {
 
     _id: Types.ObjectId;
 
@@ -18,4 +18,4 @@ export class Playlists_videos {
     position: number;
     
 }
-export const Playlists_videosSchema = SchemaFactory.createForClass(Playlists_videos);
+export const PlaylistVideosSchema = SchemaFactory.createForClass(PlaylistVideos);

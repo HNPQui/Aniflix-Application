@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { ObjectId } from 'mongoose';
+import { HasRoles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
+import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 
 @Controller('videos')
 export class VideosController {
@@ -11,7 +14,6 @@ export class VideosController {
   @Post()
   create(@Body() createVideoDto: CreateVideoDto) {
     return this.videosService.create(createVideoDto);
-
   }
 
   @Get()
@@ -20,8 +22,7 @@ export class VideosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: ObjectId) {
-    
+  findOne(@Param('id', ValidateMongoIdPipe) id: ObjectId) {
     return this.videosService.findOne(id);
   }
 

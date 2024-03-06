@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Model, ObjectId } from 'mongoose';
+import { FilterQuery, Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
 
@@ -20,6 +20,9 @@ export class UsersService {
 
   findOne(id: ObjectId) {
     return this.userModel.findById(id);
+  }
+  findUsername(query : FilterQuery<User>) {
+    return this.userModel.findOne(query);
   }
 
   update(id: ObjectId, updateUserDto: UpdateUserDto) {

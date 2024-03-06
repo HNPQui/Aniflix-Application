@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Playlists } from 'src/schemas/playlists.schemas';
+import { Playlist } from 'src/schemas/playlist.schema';
 import { Model, ObjectId } from 'mongoose';
 
 @Injectable()
 export class PlaylistsService {
 
   constructor(
-      @InjectModel(Playlists.name) private playlistModel:Model<Playlists>,
+      @InjectModel(Playlist.name) private playlistModel:Model<Playlist>,
 
   ){}
   create(createPlaylistDto: CreatePlaylistDto) {
