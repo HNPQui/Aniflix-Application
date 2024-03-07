@@ -1,37 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query, Req } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Types } from 'mongoose';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
-  @HasRoles(Role.USER)
+  constructor(private readonly commentsService: CommentsService) { }
+  // @HasRoles(Role.USER)
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
+  create(@Req() req, @Body() createCommentDto: CreateCommentDto) {
+    createCommentDto.userId = req.user.sub;
     return this.commentsService.create(createCommentDto);
   }
 
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  findAll(
+    @Query('videoId', ParseMongoIdPipe) videoId: Types.ObjectId,
+    @Query('page', ParseIntPipe) page: number = 1
+  ) {
+    return this.commentsService.findAll(videoId, page, 1);
   }
 
-  @Get(':id')
-  findOne(@Param('id',ValidateMongoIdPipe) id: string) {
-    return this.commentsService.findOne(id);
-  }
-  @HasRoles(Role.USER, Role.ADMIN)
+  // @Get(':id')
+  // findOne(@Param('id', ParseMongoIdPipe) id: string) {
+  //   return this.commentsService.findOne(id);
+  // }
+  // @HasRoles(Role.USER)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(id, updateCommentDto);
+  update(@Req() req, @Body() updateCommentDto: UpdateCommentDto) {
+    updateCommentDto.userId = req.user?.sub || new Types.ObjectId("65e93261055ce5a463990cbc"); // FAKE
+    return this.commentsService.update(updateCommentDto);
   }
-@HasRoles(Role.USER)
+  // @HasRoles(Role.USER)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(id);
+  remove(@Req() req, @Param('id', ParseMongoIdPipe) commentId: Types.ObjectId) {
+    const userId = req.user?.sub || new Types.ObjectId("65e93261055ce5a463990cbc"); // FAKE
+    return this.commentsService.remove(userId, commentId);
   }
 }

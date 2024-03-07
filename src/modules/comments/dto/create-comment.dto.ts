@@ -1,24 +1,19 @@
-import { IsBoolean, IsNotEmpty, Max } from "class-validator";
+import { Optional } from "@nestjs/common";
+import { IsMongoId, IsNotEmpty, Length } from "class-validator";
+import { Types } from "mongoose";
+import { ObjectIdTransform } from "src/pipes/mongoid-transformer.pipe";
 
 export class CreateCommentDto {
-    
-    @IsNotEmpty()
-    @Max(20)
-    title: string;
+
+    @Optional()
+    @ObjectIdTransform()
+    userId: Types.ObjectId;
 
     @IsNotEmpty()
-    @Max(100)
+    @ObjectIdTransform()
+    videoId: Types.ObjectId;
+
+    @IsNotEmpty()
+    @Length(5, 200)
     content: string;
-
-  
-    @IsNotEmpty()
-    @IsBoolean()
-    status: string;
-
-    @IsNotEmpty()
-    likes: number;
-    @IsNotEmpty()
-    dislikes: number;
-    @IsNotEmpty()
-    replies: number;
 }

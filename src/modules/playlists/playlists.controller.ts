@@ -3,7 +3,7 @@ import { PlaylistsService } from './playlists.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { ObjectId } from 'mongoose';
-import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
@@ -22,7 +22,7 @@ export class PlaylistsController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ValidateMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id',ParseMongoIdPipe) id: ObjectId) {
     return this.playlistsService.findOne(id);
   }
   @HasRoles(Role.USER, Role.ADMIN)

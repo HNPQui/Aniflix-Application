@@ -3,7 +3,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ObjectId } from 'mongoose';
-import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
@@ -22,7 +22,7 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ValidateMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id',ParseMongoIdPipe) id: ObjectId) {
     return this.categoriesService.findOne(id);
   }
   @HasRoles(Role.USER, Role.ADMIN)

@@ -5,7 +5,7 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 import { ObjectId } from 'mongoose';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
-import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 
 @Controller('videos')
 export class VideosController {
@@ -22,7 +22,7 @@ export class VideosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ValidateMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id', ParseMongoIdPipe) id: ObjectId) {
     return this.videosService.findOne(id);
   }
   @HasRoles(Role.USER, Role.ADMIN)

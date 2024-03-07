@@ -5,7 +5,7 @@ import { UpdateLikeDto } from './dto/update-like.dto';
 import { Role } from 'src/enums/role.enum';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Types } from 'mongoose';
-import { ValidateMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 
 @Controller('likes')
 export class LikesController {

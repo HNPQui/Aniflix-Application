@@ -13,22 +13,22 @@ export class CategoriesService {
 
   ) {}
   create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+    return this.categoryModel.create(createCategoryDto);
   }
 
   findAll() {
-    return this.categoryModel.find().select("_id").exec();
+    return this.categoryModel.find().select("_id").lean();
   }
 
   findOne(id: ObjectId) {
-    return this.categoryModel.findById(id);
+    return this.categoryModel.findById(id).lean();
   }
 
   update(id: ObjectId, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, { new: true });
+    return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto).lean();
   }
 
   remove(id: ObjectId) {
-    return this.categoryModel.findByIdAndDelete(id);
+    return this.categoryModel.findByIdAndDelete(id).lean();
   }
 }
