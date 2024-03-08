@@ -17,7 +17,7 @@ export class CategoriesService {
   }
 
   findAll() {
-    return this.categoryModel.find().select("_id").lean();
+    return this.categoryModel.find().lean();
   }
 
   findOne(id: ObjectId) {

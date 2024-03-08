@@ -6,11 +6,7 @@ import { Video } from './video.schema';
 export type LikeDocument = HydratedDocument<Like>;
 
 @Schema({
-    versionKey: false, timestamps: true,
-    toJSON:
-    {
-        virtuals: true,
-    }
+    versionKey: false, timestamps: true
 })
 export class Like {
     _id: Types.ObjectId;
@@ -22,18 +18,13 @@ export class Like {
     video: Video;
 
     @Prop({
-        type: [{
-            type: Types.ObjectId,
-            ref: User.name
-        }]
+        type: [Types.ObjectId],
+        ref: User.name
     })
     users: User[];
 
     likesCount: number;
 }
 const LikeSchema = SchemaFactory.createForClass(Like);
-LikeSchema.virtual('likesCount').get(function () {
-    return this.users.length;
-});
 
 export { LikeSchema as LikesSchema };

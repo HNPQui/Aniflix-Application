@@ -26,11 +26,7 @@ export class Video {
     @Prop()
     views: number;
 
-    @Prop({
-        type: [
-            { type: Types.ObjectId, ref: Category.name }
-        ]
-    })
+    @Prop({ type: [Types.ObjectId], ref: Category.name })
     categories: Category[];
 
     @Prop()

@@ -34,7 +34,7 @@ export class LikesService {
       },
       {
         $sort: {
-          count: -1
+          likeCount: -1
         }
       },
       {

@@ -38,7 +38,15 @@ export class CommentsService {
       videoId
     }).sort({ updatedAt: -1 }) // sắp xếp theo thời gian tạo mới nhất
       .skip((page - 1) * limit) //skip the first n items
-      .limit(limit); //limit the number of items returned
+      .limit(limit) //limit the number of items returned
+      // chỉ lấy những document ko có deletedAt hoặc deletedAt = null trong field `comments`
+      .select({
+        comments: {
+          $elemMatch: {
+            deletedAt: { $exists: false }
+          }
+        }
+      }).lean();;
   }
 
   findOne(id: string) {
@@ -60,7 +68,7 @@ export class CommentsService {
       }
     })
       .select("_id")
-      .lean() 
+      .lean()
       .exec();
     return result ?? false
   }

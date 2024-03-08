@@ -9,8 +9,10 @@ import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 
 @Controller('videos')
 export class VideosController {
+
   constructor(private readonly videosService: VideosService) { }
-  @HasRoles(Role.USER)
+  
+  // @HasRoles(Role.USER)
   @Post()
   create(@Body() createVideoDto: CreateVideoDto) {
     return this.videosService.create(createVideoDto);
@@ -25,12 +27,12 @@ export class VideosController {
   findOne(@Param('id', ParseMongoIdPipe) id: ObjectId) {
     return this.videosService.findOne(id);
   }
-  @HasRoles(Role.USER, Role.ADMIN)
+  // @HasRoles(Role.USER, Role.ADMIN)
   @Patch(':id')
   update(@Param('id') id: ObjectId, @Body() updateVideoDto: UpdateVideoDto) {
     return this.videosService.update(id, updateVideoDto);
   }
-  @HasRoles(Role.USER)
+  // @HasRoles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: ObjectId) {
     return this.videosService.remove(id);

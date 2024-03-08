@@ -17,7 +17,7 @@ export class VideosService {
   }
 
   findAll() {
-    return this.videoModel.find().limit(3).populate("categories");
+    return this.videoModel.find().limit(3).populate("categories").lean();
   }
 
   findOne(id: ObjectId) {
