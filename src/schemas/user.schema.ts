@@ -21,10 +21,11 @@ export class User {
     email: string;
 
     @Prop({
-        type: String,
+        type: [String],
         enum: Role,
+        default: [Role.USER]
     })
-    role: Role;
+    role: Role[];
 
 }
 export const UserSchema = SchemaFactory.createForClass(User);
