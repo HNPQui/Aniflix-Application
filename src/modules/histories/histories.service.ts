@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateHistoryDto } from './dto/create-history.dto';
 import { UpdateHistoryDto } from './dto/update-history.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, Types} from 'mongoose';
 import { History } from 'src/schemas/history.schema';
 
 @Injectable()
@@ -15,19 +15,19 @@ export class HistoriesService {
     return 'This action adds a new history';
   }
 
-  findAll(userId : ObjectId | string) {
+  findAll(userId : Types.ObjectId | string) {
     return this.historyModel.find({ user : userId }).exec();
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: Types.ObjectId) {
     return this.historyModel.findById(id);
   }
 
-  update(id: ObjectId, updateHistoryDto: UpdateHistoryDto) {
+  update(id: Types.ObjectId, updateHistoryDto: UpdateHistoryDto) {
     return this.historyModel.findByIdAndUpdate(id, updateHistoryDto, { new: true });
   }
 
-  remove(id: ObjectId) {
+  remove(id: Types.ObjectId) {
     return this.historyModel.findByIdAndDelete(id);
   }
 }

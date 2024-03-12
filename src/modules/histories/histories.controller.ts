@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { HistoriesService } from './histories.service';
 import { CreateHistoryDto } from './dto/create-history.dto';
 import { UpdateHistoryDto } from './dto/update-history.dto';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
@@ -23,17 +23,17 @@ export class HistoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id',ParseMongoIdPipe) id: Types.ObjectId) {
     return this.historiesService.findOne(id);
   }
   @HasRoles(Role.USER, Role.ADMIN)
   @Patch(':id')
-  update(@Param('id') id: ObjectId, @Body() updateHistoryDto: UpdateHistoryDto) {
+  update(@Param('id') id: Types.ObjectId, @Body() updateHistoryDto: UpdateHistoryDto) {
     return this.historiesService.update(id, updateHistoryDto);
   }
   @HasRoles(Role.USER)
   @Delete(':id')
-  remove(@Param('id') id: ObjectId) {
+  remove(@Param('id') id: Types.ObjectId) {
     return this.historiesService.remove(id);
   }
 }

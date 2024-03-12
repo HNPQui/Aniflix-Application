@@ -3,7 +3,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from 'src/schemas/category.schema';
-import { Model, ObjectId } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class CategoriesService {
@@ -20,15 +20,15 @@ export class CategoriesService {
     return this.categoryModel.find().lean();
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: Types.ObjectId) {
     return this.categoryModel.findById(id).lean();
   }
 
-  update(id: ObjectId, updateCategoryDto: UpdateCategoryDto) {
+  update(id: Types.ObjectId, updateCategoryDto: UpdateCategoryDto) {
     return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto).lean();
   }
 
-  remove(id: ObjectId) {
+  remove(id: Types.ObjectId) {
     return this.categoryModel.findByIdAndDelete(id).lean();
   }
 }

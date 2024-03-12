@@ -3,7 +3,7 @@ import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Playlist } from 'src/schemas/playlist.schema';
-import { Model, ObjectId } from 'mongoose';
+import { Model, Types} from 'mongoose';
 
 @Injectable()
 export class PlaylistsService {
@@ -20,15 +20,15 @@ export class PlaylistsService {
     return this.playlistModel.find();
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: Types.ObjectId) {
     return this.playlistModel.findById(id);
   }
 
-  update(id: ObjectId, updatePlaylistDto: UpdatePlaylistDto) {
+  update(id: Types.ObjectId, updatePlaylistDto: UpdatePlaylistDto) {
     return this.playlistModel.findByIdAndUpdate(id, updatePlaylistDto, { new: true });
   }
 
-  remove(id: ObjectId) {
+  remove(id: Types.ObjectId) {
     return this.playlistModel.findByIdAndDelete(id);
   }
 }

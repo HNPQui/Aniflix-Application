@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { VideosService } from './videos.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
-import { ObjectId } from 'mongoose';
+import { Types} from 'mongoose';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
@@ -24,17 +24,17 @@ export class VideosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
     return this.videosService.findOne(id);
   }
   // @HasRoles(Role.USER, Role.ADMIN)
   @Patch(':id')
-  update(@Param('id') id: ObjectId, @Body() updateVideoDto: UpdateVideoDto) {
+  update(@Param('id') id: Types.ObjectId, @Body() updateVideoDto: UpdateVideoDto) {
     return this.videosService.update(id, updateVideoDto);
   }
   // @HasRoles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: ObjectId) {
+  remove(@Param('id') id: Types.ObjectId) {
     return this.videosService.remove(id);
   }
 }

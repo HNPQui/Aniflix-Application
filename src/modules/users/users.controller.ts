@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
-import { ObjectId } from 'mongoose';
+import { Types} from 'mongoose';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
@@ -28,18 +28,18 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
     return this.usersService.findOne(id);
   }
   @HasRoles(Role.ADMIN, Role.USER)
 
   @Patch(':id')
-  update(@Param('id', ParseMongoIdPipe) id: ObjectId, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id', ParseMongoIdPipe) id: Types.ObjectId, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
   @HasRoles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id', ParseMongoIdPipe) id: ObjectId) {
+  remove(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
     return this.usersService.remove(id);
   }
 }

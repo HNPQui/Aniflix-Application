@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FilterQuery, Model, ObjectId } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
 
@@ -18,18 +18,18 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: Types.ObjectId) {
     return this.userModel.findById(id);
   }
   findUsername(query : FilterQuery<User>) {
     return this.userModel.findOne(query);
   }
 
-  update(id: ObjectId, updateUserDto: UpdateUserDto) {
+  update(id: Types.ObjectId, updateUserDto: UpdateUserDto) {
     return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
   }
 
-  remove(id: ObjectId) {
+  remove(id: Types.ObjectId) {
     return this.userModel.findByIdAndDelete(id);
   }
 }

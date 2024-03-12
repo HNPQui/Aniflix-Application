@@ -4,7 +4,7 @@ import { UpdatePlaylistsVideoDto } from './dto/update-playlists_video.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { PlaylistVideos } from 'src/schemas/playlist-video.schema';
 import { PlaylistsVideosModule } from './playlists_videos.module';
-import { Model, ObjectId } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class PlaylistsVideosService {
@@ -21,15 +21,15 @@ export class PlaylistsVideosService {
     return this.playlistsVideoModel.find();
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: Types.ObjectId) {
     return this.playlistsVideoModel.findById(id);
   }
 
-  update(id: ObjectId, updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
+  update(id: Types.ObjectId, updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
     return this.playlistsVideoModel.findByIdAndUpdate(id, updatePlaylistsVideoDto, { new: true })
   }
 
-  remove(id: ObjectId) {
+  remove(id: Types.ObjectId) {
     return this.playlistsVideoModel.findByIdAndDelete(id);
   }
 }

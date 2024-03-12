@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PlaylistsVideosService } from './playlists_videos.service';
 import { CreatePlaylistsVideoDto } from './dto/create-playlists_video.dto';
 import { UpdatePlaylistsVideoDto } from './dto/update-playlists_video.dto';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
@@ -23,17 +23,17 @@ export class PlaylistsVideosController {
   }
   
   @Get(':id')
-  findOne(@Param('id',ParseMongoIdPipe) id: ObjectId) {
+  findOne(@Param('id',ParseMongoIdPipe) id: Types.ObjectId) {
     return this.playlistsVideosService.findOne(id);
   }
   @HasRoles(Role.USER, Role.ADMIN)
   @Patch(':id')
-  update(@Param('id') id: ObjectId, @Body() updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
+  update(@Param('id') id: Types.ObjectId, @Body() updatePlaylistsVideoDto: UpdatePlaylistsVideoDto) {
     return this.playlistsVideosService.update(id, updatePlaylistsVideoDto);
   }
   @HasRoles(Role.USER)
   @Delete(':id')
-  remove(@Param('id') id: ObjectId) {
+  remove(@Param('id') id: Types.ObjectId) {
     return this.playlistsVideosService.remove(id);
   }
 }
