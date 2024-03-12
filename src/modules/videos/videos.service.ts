@@ -4,13 +4,19 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Video } from 'src/schemas/video.schema';
+import { QuerySearchVideoDto } from './dto/search-video.dto';
 
 @Injectable()
 export class VideosService {
-
   constructor(
     @InjectModel(Video.name) private videoModel: Model<Video>,
   ) { }
+
+  search(dto : QuerySearchVideoDto) {
+    return this.videoModel.find({title: { $regex: dto.keyword, $options: 'i' }});
+  }
+
+  
 
   create(createVideoDto: CreateVideoDto) {
     return this.videoModel.create(createVideoDto);
