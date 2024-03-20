@@ -39,4 +39,6 @@ export class Video {
     deletedAt: Date;
 
 }
-export const VideoSchema = SchemaFactory.createForClass(Video);
+const VideoSchema = SchemaFactory.createForClass(Video);
+VideoSchema.index({ title: 'text', description: 'text' });
+export { VideoSchema }

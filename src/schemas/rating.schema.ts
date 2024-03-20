@@ -16,15 +16,16 @@ export class Rating {
     //stars: number;
 
     @Prop()
-    ratings: {
-        type: Types.ObjectId,
-        1: Number,
-        2: Number,
-        3: Number,
-        4: Number,
-        5: Number,
-        default: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 }
-    }
+    ratings: number;
+    // {
+    //     type: Types.ObjectId,
+    //     1: Number,
+    //     2: Number,
+    //     3: Number,
+    //     4: Number,
+    //     5: Number,
+    //     default: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 }
+    // }
 
     @Prop({ default: Date.now })
     createdAt: Date;

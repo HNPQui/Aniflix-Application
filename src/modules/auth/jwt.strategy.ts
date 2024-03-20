@@ -4,7 +4,6 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { UsersService } from "../users/users.service";
 import { AuthService } from "./auth.service";
-import { ContextIdFactory } from "@nestjs/core";
 
 interface JwtPayload {
     sub: string; // id của user
