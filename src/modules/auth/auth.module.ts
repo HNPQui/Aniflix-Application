@@ -5,7 +5,6 @@ import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { GoogleStrategy } from './google.straegy';
@@ -23,11 +22,11 @@ import { GoogleStrategy } from './google.straegy';
     UsersModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GoogleStrategy
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard
-    // }
+  providers: [AuthService, JwtStrategy, GoogleStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    }
   ],
 })
 export class AuthModule { }
