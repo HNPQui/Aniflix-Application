@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { GoogleStrategy } from './google.straegy';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { APP_GUARD } from '@nestjs/core';
     UsersModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy,
+  providers: [AuthService, JwtStrategy, GoogleStrategy
     // {
     //   provide: APP_GUARD,
     //   useClass: JwtAuthGuard

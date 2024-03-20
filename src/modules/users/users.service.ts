@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterQuery, Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'src/schemas/user.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +18,11 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  findOne(id: Types.ObjectId) {
+  findOne(query : FilterQuery<User>) {
+    return this.userModel.findOne(query);
+  }
+
+  findById(id: Types.ObjectId) {
     return this.userModel.findById(id);
   }
   findUsername(query : FilterQuery<User>) {
