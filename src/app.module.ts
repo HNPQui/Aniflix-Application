@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as AllModules from './modules';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FcmModule } from './modules/nestjs-fcm/fcm.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -14,6 +16,9 @@ import { FcmModule } from './modules/nestjs-fcm/fcm.module';
         uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService]
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
     }),
     FcmModule.forRoot({
       firebaseSpecsPath: 'src/firebase-adminsdk.json'
