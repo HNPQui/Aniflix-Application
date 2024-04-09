@@ -9,3 +9,5 @@ export * from './playlists/playlists.module';
 export * from './playlists_videos/playlists_videos.module';
 export * from './rating/rating.module';
 export * from './upload_video/upload.module';
+export * from './genres/genres.module';
+export * from './movies/movies.module';

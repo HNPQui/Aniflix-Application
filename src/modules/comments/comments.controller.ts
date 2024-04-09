@@ -10,9 +10,10 @@ import { Types } from 'mongoose';
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) { }
-  // @HasRoles(Role.USER)
+  @HasRoles(Role.USER)
   @Post()
   create(@Req() req, @Body() createCommentDto: CreateCommentDto) {
+    console.log(req.user);
     createCommentDto.userId = req.user.sub;
     return this.commentsService.create(createCommentDto);
   }

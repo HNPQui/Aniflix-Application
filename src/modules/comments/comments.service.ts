@@ -15,7 +15,7 @@ export class CommentsService {
 
   create(dto: CreateCommentDto) {
     const comment = new this.commentModel(dto);
-    return this.bucketCommentModel.findOneAndUpdate({
+    this.bucketCommentModel.findOneAndUpdate({
       videoId: dto.videoId,
       count: { $lt: 5 }
     },
@@ -30,23 +30,27 @@ export class CommentsService {
           videoId: dto.videoId
         }
       },
-      { upsert: true });
+      { upsert: true }).exec();
+    return true
   }
 
   findAll(videoId: Types.ObjectId, page: number = 1, limit: number = 1) {
-    return this.bucketCommentModel.find({
-      videoId
-    }).sort({ updatedAt: -1 }) // sắp xếp theo thời gian tạo mới nhất
-      .skip((page - 1) * limit) //skip the first n items
-      .limit(limit) //limit the number of items returned
-      // chỉ lấy những document ko có deletedAt hoặc deletedAt = null trong field `comments`
-      .select({
-        comments: {
-          $elemMatch: {
-            deletedAt: { $exists: false }
+    const projection = {
+      comments: {
+        $filter: {
+          input: "$comments",
+          cond: {
+            $not: ["$$this.deletedAt"]
           }
         }
-      }).lean();;
+      }
+    }
+    return this.bucketCommentModel.find({
+      videoId,
+    }, projection).sort({ updatedAt: -1 }) // sắp xếp theo thời gian tạo mới nhất
+      .skip((page - 1) * limit) //skip the first n items
+      .limit(limit) //limit the number of items returned
+      .lean();;
   }
 
   findOne(id: string) {

@@ -60,9 +60,6 @@ export class AuthService {
       idToken: token,
       audience: this.clientID
     });
-
-    console.log("ticket=", ticket.getPayload());
-
     return ticket.getPayload();
   }
 
@@ -79,7 +76,8 @@ export class AuthService {
     const payload = {
       sub: user._id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      roles: user.role
     };
     return await this.jwtService.signAsync(payload)
   }

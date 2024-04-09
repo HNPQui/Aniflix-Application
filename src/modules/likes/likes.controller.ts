@@ -13,16 +13,32 @@ export class LikesController {
 
   @HasRoles(Role.USER)
   @Post()
-  @HasRoles(Role.USER)
   create(@Request() req, @Body() createLikeDto: CreateLikeDto) {
-    console.log(req.user)
-    createLikeDto.userId = req.user.sub;
+    createLikeDto.userId = new Types.ObjectId(req.user.sub);
     return this.likesService.create(createLikeDto);
   }
+
+  @HasRoles(Role.USER)
+  @Delete(':id')
+  remove(@Request() req, @Param('id', ParseMongoIdPipe) videoId: Types.ObjectId) {
+    const dto: CreateLikeDto = {
+      userId: new Types.ObjectId(req.user.sub),
+      videoId: videoId
+    }
+    return this.likesService.remove(dto);
+  }
+
 
   @Get("top")
   getTop10MostLike() {
     return this.likesService.getTop10MostLike();
+  }
+
+  @HasRoles(Role.USER)
+  @Get("info/:id")
+  getInfo(@Request() req, @Param('id', ParseMongoIdPipe) videoId: Types.ObjectId) {
+    const userId = new Types.ObjectId(req.user.sub);
+    return this.likesService.findOne(videoId, userId);
   }
 
   @HasRoles(Role.USER)
@@ -36,9 +52,5 @@ export class LikesController {
   update(@Param('id') id: Types.ObjectId, @Body() updateLikeDto: UpdateLikeDto) {
     return this.likesService.update(id, updateLikeDto);
   }
- @HasRoles(Role.USER)
-  @Delete(':id')
-  remove(@Param('id') id: Types.ObjectId) {
-    return this.likesService.remove(id);
-  }
+
 }

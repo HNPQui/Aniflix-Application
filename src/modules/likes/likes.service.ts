@@ -12,14 +12,17 @@ export class LikesService {
   constructor(
     @InjectModel(Like.name) private likeModel: Model<Like>,
   ) { }
-  create(createLikeDto: CreateLikeDto) {
 
-    return this.likeModel.findOneAndUpdate({ video: createLikeDto.videoId },
-    {
-      $pull: { children: createLikeDto.userId }, // Remove child from array if it exists
-      $addToSet: { children: createLikeDto.userId } // Add child to array if it doesn't exist
-    },
-    { upsert: true });
+
+  create({ videoId, userId }: CreateLikeDto) {
+    return this.likeModel.findOneAndUpdate({ video: videoId },
+      {
+        $addToSet: { users: userId },
+      },
+      {
+        upsert: true,
+        lean: true,
+      });
   }
 
   //top 10 video most like
@@ -86,7 +89,7 @@ export class LikesService {
     const query = this.likeModel.aggregate([
       {
         $match: {
-          _id: videoId
+          video: videoId
         }
       },
       {
@@ -115,7 +118,14 @@ export class LikesService {
     return this.likeModel.findByIdAndUpdate(id, updateLikeDto, { new: true })
   }
 
-  remove(id: Types.ObjectId) {
-    return this.likeModel.findByIdAndDelete(id);
+  remove({ videoId, userId }: CreateLikeDto) {
+    return this.likeModel.findOneAndUpdate({ video: videoId },
+      {
+        $pull: { users: userId },
+      },
+      {
+        upsert: true,
+        lean: true,
+      });
   }
 }
