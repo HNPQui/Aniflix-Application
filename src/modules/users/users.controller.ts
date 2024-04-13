@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
-import { Types} from 'mongoose';
+import { Types } from 'mongoose';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
@@ -22,17 +22,28 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll();
   }
-  @Get('test')
-  tesst() {
-    return this.usersService.findAll();
+
+  @HasRoles(Role.USER)
+  @Get()
+  claim(@Req() req) {
+    return this.usersService.claim(req.user._id);
+  }
+
+  @HasRoles(Role.USER)
+  @Get('me')
+  me(@Req() req) {
+    return this.usersService.findOne({
+      _id: req.user.sub
+    });
   }
 
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
     return this.usersService.findOne(id);
   }
-  @HasRoles(Role.ADMIN, Role.USER)
 
+
+  @HasRoles(Role.ADMIN)
   @Patch(':id')
   update(@Param('id', ParseMongoIdPipe) id: Types.ObjectId, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);

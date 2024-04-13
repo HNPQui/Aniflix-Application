@@ -23,6 +23,11 @@ export class MoviesController {
     return this.moviesService.findAll();
   }
 
+  @Get("top")
+  findTop(@Query() query : QuerySearchVideoDto) {
+    return this.moviesService.findTop(query);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.moviesService.findOne(+id);

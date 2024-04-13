@@ -6,34 +6,7 @@ export type MovieDocument = HydratedDocument<Movie>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Movie {
-    _id: Types.ObjectId;
-
-    @Prop()
-    images: string;
-
-    @Prop()
-    title: string;
-
-    @Prop()
-    episodes: number;
-
-    @Prop()
-    type: string;
-
-    @Prop()
-    source: string;
-
-    @Prop()
-    score: number;
-
-    @Prop()
-    synopsis: string;
-
-    @Prop()
-    background: string;
-
-    @Prop()
-    year: number;
+    _id: Types.ObjectId
 
     @Prop({
         type: [Types.ObjectId],
@@ -42,28 +15,25 @@ export class Movie {
     genres: Genre[];
 
     @Prop()
-    streaming: string;
+    popularity: number;
 
     @Prop()
-    duration: string;
+    favorites: number;
 
     @Prop()
-    rating: string;
-
-    @Prop()
-    rank: number;
-
-    @Prop()
-    season: string;
+    airing: boolean;
     
+    @Prop()
+    type: string;
+
     @Prop({
-        type: [String]
+        default: 'FINISHED',
+        enum: ['PENDING', 'FINISHED']
     })
-    studios: String[];
-    @Prop({
-        type: [String]
-    })
-    producers: String[];
+    status: string;
+
+    // @Prop()
+    // streaming: string[];
 
 }
 export const MovieSchema = SchemaFactory.createForClass(Movie);

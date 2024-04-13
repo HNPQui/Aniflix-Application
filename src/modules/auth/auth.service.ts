@@ -5,6 +5,8 @@ import { UserDocument } from 'src/schemas/user.schema';
 import { Auth, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
 import e from 'express';
+import { LoginAuthDto } from './dto/login.dto';
+import { RegisterAuthDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -31,12 +33,14 @@ export class AuthService {
     } catch (error) {
       throw new BadRequestException("Invalid token");
     }
-    const { email, name, picture } = tokenInfo;
+    const { email, given_name, name, picture } = tokenInfo;
     var user: UserDocument = await this.userService.findOne({ email });
     if (!user) {
       user = await this.userService.create({
         email,
         name,
+        username: given_name,
+        password: Buffer.from(email).toString('base64'),
         picture
       });
     }
@@ -63,12 +67,42 @@ export class AuthService {
     return ticket.getPayload();
   }
 
+  async register(payload: RegisterAuthDto) {
+    //check username or email exist
+    const userExist = await this.userService.findOne({
+      $or: [
+        { username: payload.username },
+        { email: payload.email }
+      ]
+    });
 
-  async login(username: string) {
-    const user: UserDocument = await this.userService.findUsername({ username });
-    console.log(user)
+    if (userExist) {
+      throw new BadRequestException("User already exist");
+    }
+
+    payload.password = Buffer.from(payload.password).toString('base64');
+
+    const dto: any = payload;
+    console.log("register", dto);
+    const user: UserDocument = await this.userService.create(dto);
     return {
-      access_token: await this.jwtService.signAsync({ sub: user._id, username })
+      access_token: await this.signToken(user)
+    }
+  }
+
+
+  async login(payload: LoginAuthDto) {
+    const passwordEncode = Buffer.from(payload.password).toString('base64');
+    const user: UserDocument = await this.userService.findUsername({
+      username: payload.username,
+      password: passwordEncode
+    });
+
+    if (!user) {
+      throw new BadRequestException("Invalid username or password");
+    }
+    return {
+      access_token: await this.signToken(user)
     }
   }
 

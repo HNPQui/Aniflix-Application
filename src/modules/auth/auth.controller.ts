@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { LoginAuthDto } from './dto/login.dto';
+import { RegisterAuthDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,10 +18,17 @@ export class AuthController {
     return req.user;
   }
 
-  @Get(':username')
-  login(@Param('username') username: string) {
-    return this.authService.login(username);
+  @Post("login")
+  login(@Body() payload: LoginAuthDto) {
+    return this.authService.login(payload);
   }
+
+  @Post("register")
+  register(@Body() payload: RegisterAuthDto) {
+    return this.authService.register(payload);
+  }
+
+
   @Post('google')
   googleAuth(@Body('token') token: string) {
     return this.authService.authenticateGoogle(token);

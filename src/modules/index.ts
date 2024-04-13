@@ -11,3 +11,4 @@ export * from './rating/rating.module';
 export * from './upload_video/upload.module';
 export * from './genres/genres.module';
 export * from './movies/movies.module';
+export * from './invoices/invoices.module';

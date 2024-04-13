@@ -12,10 +12,22 @@ export class User {
     name: string;
 
     @Prop()
-    phone: string;
+    password: string;
 
-    @Prop()
+    @Prop({
+        default: ""
+    })
     picture: string;
+
+    @Prop({
+        default: 0
+    })
+    point: number;
+
+    @Prop({
+        default: false
+    })
+    isPremium: boolean;
 
     @Prop()
     username: string;

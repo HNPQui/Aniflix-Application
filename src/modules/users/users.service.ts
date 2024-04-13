@@ -18,14 +18,20 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  findOne(query : FilterQuery<User>) {
-    return this.userModel.findOne(query);
+  claim(userId: Types.ObjectId) {
+    return this.userModel.findByIdAndUpdate(userId, {
+      $inc: { point: 10 }
+    })
+  }
+
+  findOne(query: FilterQuery<User>) {
+    return this.userModel.findOne(query, { password: 0 });
   }
 
   findById(id: Types.ObjectId) {
     return this.userModel.findById(id);
   }
-  findUsername(query : FilterQuery<User>) {
+  findUsername(query: FilterQuery<User>) {
     return this.userModel.findOne(query);
   }
 
