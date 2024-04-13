@@ -17,6 +17,15 @@ export class UploadVideoController {
     return 'This action returns all uploadVideo';
   }
 
+  @Post("image")
+  @UseInterceptors(FileInterceptor('file'))
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      return "File upload failed"
+    }
+    return file;
+  }
+
   @Post('video/:id')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(

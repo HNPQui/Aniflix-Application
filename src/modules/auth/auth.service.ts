@@ -34,7 +34,7 @@ export class AuthService {
       throw new BadRequestException("Invalid token");
     }
     const { email, given_name, name, picture } = tokenInfo;
-    var user: UserDocument = await this.userService.findOne({ email });
+    var user : UserDocument = await this.userService.findOne({ email });
     if (!user) {
       user = await this.userService.create({
         email,

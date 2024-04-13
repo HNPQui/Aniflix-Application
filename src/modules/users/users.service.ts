@@ -18,9 +18,9 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  claim(userId: Types.ObjectId) {
+  claim(userId: Types.ObjectId, point) {
     return this.userModel.findByIdAndUpdate(userId, {
-      $inc: { point: 10 }
+      point: point
     })
   }
 
@@ -36,7 +36,7 @@ export class UsersService {
   }
 
   update(id: Types.ObjectId, updateUserDto: UpdateUserDto) {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).select({ password: 0 });
   }
 
   remove(id: Types.ObjectId) {

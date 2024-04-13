@@ -8,10 +8,19 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
     _id: Types.ObjectId;
 
-    @Prop()
+    @Prop({
+        default: "No name"
+    })
     name: string;
 
-    @Prop()
+    @Prop({
+        required: true
+    })
+    username: string;
+
+    @Prop({
+        required: true
+    })
     password: string;
 
     @Prop({
@@ -29,10 +38,9 @@ export class User {
     })
     isPremium: boolean;
 
-    @Prop()
-    username: string;
-
-    @Prop()
+    @Prop({
+        default: ""
+    })
     email: string;
 
     @Prop({

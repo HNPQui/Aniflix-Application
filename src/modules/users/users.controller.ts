@@ -13,7 +13,7 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
+    console.log("createUserDto", createUserDto);
     return this.usersService.create(createUserDto);
   }
 
@@ -24,9 +24,9 @@ export class UsersController {
   }
 
   @HasRoles(Role.USER)
-  @Get()
-  claim(@Req() req) {
-    return this.usersService.claim(req.user._id);
+  @Get("point/:point")
+  claim(@Req() req, @Param('point') point: number) {
+    return this.usersService.claim(req.user.sub, point);
   }
 
   @HasRoles(Role.USER)
@@ -43,10 +43,10 @@ export class UsersController {
   }
 
 
-  @HasRoles(Role.ADMIN)
-  @Patch(':id')
-  update(@Param('id', ParseMongoIdPipe) id: Types.ObjectId, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  @HasRoles(Role.USER)
+  @Patch()
+  update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(req.user.sub, updateUserDto);
   }
   @HasRoles(Role.ADMIN)
   @Delete(':id')
