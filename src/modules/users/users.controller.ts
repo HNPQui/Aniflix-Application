@@ -18,7 +18,6 @@ export class UsersController {
   }
 
   @Get()
-  @HasRoles(Role.ADMIN)
   findAll() {
     return this.usersService.findAll();
   }

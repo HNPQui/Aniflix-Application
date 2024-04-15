@@ -105,8 +105,8 @@ export class AuthService {
     }).exec();
     if (user) {
       if (info.includes('@')) {
-        //generate otp 6 digit
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        //generate otp 4 digit
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
         await this.userService.update(user._id, {
           otp: {
             code: otp,

@@ -14,7 +14,8 @@ export class User {
     name: string;
 
     @Prop({
-        required: true
+        required: true,
+        default: ""
     })
     username: string;
 
@@ -37,6 +38,12 @@ export class User {
         default: ""
     })
     phone: string;
+
+    @Prop({
+        default: true
+    })
+    status: boolean;
+
 
     @Prop({
         type : Object,
