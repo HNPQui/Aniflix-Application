@@ -28,6 +28,24 @@ export class AuthController {
     return this.authService.register(payload);
   }
 
+  @Post("forgot-password")
+  forgotPassword(@Body('info') info: string) {
+    return this.authService.forgotPassword(info);
+  }
+
+  @Post("send-otp")
+  sendOtp(@Body('info') info: string) {
+    return this.authService.sendOtp(info);
+  }
+
+  @Post("confirm-otp")
+  confirmOtp(
+    @Body('info') info: string,
+    @Body('otp') otp: string
+  ) {
+    return this.authService.confirmOtp(info, otp);
+  }
+
 
   @Post('google')
   googleAuth(@Body('token') token: string) {

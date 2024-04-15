@@ -30,6 +30,14 @@ export class UsersController {
   }
 
   @HasRoles(Role.USER)
+  @Post("reset-password")
+  resetPassword(@Req() req, @Body("newPassword") password: string) {
+    return this.usersService.update(req.user.sub, {
+      password: Buffer.from(password).toString('base64')
+    }).select({ password: 0 });
+  }
+
+  @HasRoles(Role.USER)
   @Get('me')
   me(@Req() req) {
     return this.usersService.findOne({

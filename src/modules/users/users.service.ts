@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model, ProjectionType, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -24,8 +24,8 @@ export class UsersService {
     })
   }
 
-  findOne(query: FilterQuery<User>) {
-    return this.userModel.findOne(query, { password: 0 });
+  findOne(query: FilterQuery<User>, projection?: ProjectionType<User>) {
+    return this.userModel.findOne(query, projection || { password: 0 });
   }
 
   findById(id: Types.ObjectId) {

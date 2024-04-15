@@ -34,6 +34,20 @@ export class User {
     point: number;
 
     @Prop({
+        default: ""
+    })
+    phone: string;
+
+    @Prop({
+        type : Object,
+        default: null
+    })
+    otp : {
+        code : string,
+        expire : Date
+    }
+
+    @Prop({
         default: false
     })
     isPremium: boolean;

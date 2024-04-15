@@ -8,9 +8,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { GoogleStrategy } from './google.straegy';
+import { MailerModule } from '../mailer/mailer.module';
 
 @Module({
   imports: [
+    MailerModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

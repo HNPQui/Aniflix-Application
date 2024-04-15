@@ -11,7 +11,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const httpAdapter = app.get(HttpAdapterHost);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
+  app.enableCors({
+    origin: '*'
+  });
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }));
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(new TransformInterceptor());
   const configService: ConfigService = app.get(ConfigService);

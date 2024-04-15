@@ -4,19 +4,28 @@ import { UsersService } from '../users/users.service';
 import { UserDocument } from 'src/schemas/user.schema';
 import { Auth, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
-import e from 'express';
 import { LoginAuthDto } from './dto/login.dto';
 import { RegisterAuthDto } from './dto/register.dto';
-
+import { MailerService } from '../mailer/mailer.service';
+import { Twilio } from 'twilio';
 @Injectable()
 export class AuthService {
+  twilioServiceId: string;
+  private twilioClient: Twilio;
   oauthClient: Auth.OAuth2Client;
   clientID: string;
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UsersService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly mailerService: MailerService
   ) {
+    const accountSid = configService.get<string>('TWILIO_ACCOUNT_SID');
+    const authToken = configService.get<string>('TWILIO_AUTH_TOKEN');
+    this.twilioServiceId = configService.get<string>('TWILIO_VERIFICATION_SERVICE_SID');
+
+    this.twilioClient = new Twilio(accountSid, authToken);
+
     this.clientID = this.configService.get<string>('GOOGLE_AUTH_CLIENT_ID');
     const clientSecret = this.configService.get<string>('GOOGLE_AUTH_CLIENT_SECRET');
 
@@ -34,7 +43,7 @@ export class AuthService {
       throw new BadRequestException("Invalid token");
     }
     const { email, given_name, name, picture } = tokenInfo;
-    var user : UserDocument = await this.userService.findOne({ email });
+    var user: UserDocument = await this.userService.findOne({ email });
     if (!user) {
       user = await this.userService.create({
         email,
@@ -47,6 +56,82 @@ export class AuthService {
     return {
       access_token: await this.signToken(user)
     };
+  }
+  sendOtp(info: string) {
+    return this.userService.findOne({
+      $or: [
+        { email: info },
+        { phone: info },
+        { username: info }
+      ]
+    }, { email: 1, phone: 1, _id: 0 }).lean()
+  }
+
+  async confirmOtp(info: string, otp: string) {
+    if (!info.includes('@')) {
+      const result = await this.twilioClient.verify.v2.services(this.twilioServiceId).verificationChecks.create({
+        to: info,
+        code: otp
+      });
+
+      if (!result.valid || result.status !== 'approved') {
+        throw new BadRequestException('Wrong code provided');
+      }
+    }
+
+    const user = await this.userService.findOne({
+      email: info,
+      "otp.code": otp,
+      "otp.expire": { $gte: new Date() }
+    }).exec();
+    if (!user) {
+      throw new BadRequestException("Invalid OTP");
+    }
+    await this.userService.update(user._id, {
+      otp: null
+    }).exec();
+    return {
+      access_token: await this.signToken(user)
+    }
+  }
+
+
+  async forgotPassword(info: string) {
+    const user = await this.userService.findOne({
+      $or: [
+        { email: info },
+        { phone: info }
+      ]
+    }).exec();
+    if (user) {
+      if (info.includes('@')) {
+        //generate otp 6 digit
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        await this.userService.update(user._id, {
+          otp: {
+            code: otp,
+            expire: new Date(Date.now() + 30 * 60000) // 30 minutes
+          }
+        }).exec();
+        return this.mailerService.sendMail({
+          from: "Aniflix",
+          to: user.email,
+          subject: "Forgot password",
+          text: `
+          Your OTP is ${otp}
+          OTP will expire in 30 minutes`
+        });
+      } else {
+        //convert phone to e.164 format
+        return this.twilioClient.verify.v2.services(this.twilioServiceId).verifications.create({
+          to: user.phone.replace(/^0/, '+84'),
+          channel: 'sms'
+        });
+      }
+    }
+    return {
+      message: "Email not found"
+    }
   }
 
   async authenticateGoogle2(@Req() req) {
@@ -71,8 +156,7 @@ export class AuthService {
     //check username or email exist
     const userExist = await this.userService.findOne({
       $or: [
-        { username: payload.username },
-        { email: payload.email }
+        { username: payload.username }
       ]
     });
 
