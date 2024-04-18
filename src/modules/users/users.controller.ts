@@ -22,6 +22,25 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Post("check")
+  async checkPhoneEmail(@Body('info') info: string) {
+    let isExists = await this.usersService.findOne({
+      $or: [
+        { phone: info },
+        { email: info }
+      ]
+    }).exec();
+    return {
+      isExists: !!isExists
+    }
+  }
+
+  @HasRoles(Role.USER)
+  @Post("fcm")
+  fcm(@Req() req, @Body('device') device_token: string) {
+    return this.usersService.fcm(req.user.sub, device_token);
+  }
+
   @HasRoles(Role.USER)
   @Get("point/:point")
   claim(@Req() req, @Param('point') point: number) {

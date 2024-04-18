@@ -25,6 +25,12 @@ export class User {
     password: string;
 
     @Prop({
+        type: [String],
+        default: []
+    })
+    fcm_token: string[];
+
+    @Prop({
         default: ""
     })
     picture: string;

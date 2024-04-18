@@ -10,5 +10,10 @@ export class Genre {
     @Prop()
     name: string;
 
+    @Prop({
+        default: false
+    })
+    isDeleted: boolean;
+
 }
 export const GenreSchema = SchemaFactory.createForClass(Genre);

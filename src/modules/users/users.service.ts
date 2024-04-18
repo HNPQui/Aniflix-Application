@@ -7,6 +7,7 @@ import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class UsersService {
+
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
   ) { }
@@ -26,6 +27,17 @@ export class UsersService {
 
   findOne(query: FilterQuery<User>, projection?: ProjectionType<User>) {
     return this.userModel.findOne(query, projection || { password: 0 });
+  }
+
+  fcm(id: Types.ObjectId, device_token: string) {
+    return this.userModel.findByIdAndUpdate(id, {
+      $addToSet: {
+        fcm_token: device_token
+      }
+    }, {
+      new: true,
+      lean: true
+    })
   }
 
   findById(id: Types.ObjectId) {

@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { GenresService } from './genres.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { Types } from 'mongoose';
 
 @Controller('genres')
 export class GenresController {
@@ -23,12 +25,12 @@ export class GenresController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGenreDto: UpdateGenreDto) {
-    return this.genresService.update(+id, updateGenreDto);
+  update(@Param('id', ParseMongoIdPipe) id: Types.ObjectId, @Body() updateGenreDto: UpdateGenreDto) {
+    return this.genresService.update(id, updateGenreDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.genresService.remove(+id);
+  remove(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
+    return this.genresService.remove(id);
   }
 }
