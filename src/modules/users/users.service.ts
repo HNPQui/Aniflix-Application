@@ -29,6 +29,8 @@ export class UsersService {
     return this.userModel.findOne(query, projection || { password: 0 });
   }
 
+  
+
   fcm(id: Types.ObjectId, device_token: string) {
     return this.userModel.findByIdAndUpdate(id, {
       $addToSet: {
