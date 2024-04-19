@@ -3,7 +3,7 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './movie.schema';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { QuerySearchVideoDto } from '../videos/dto/search-video.dto';
 
 @Injectable()
@@ -39,8 +39,8 @@ export class MoviesService {
     return this.movieModel.find().populate('genres');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  findOne(id: Types.ObjectId) {
+    return this.movieModel.findById(id).populate('genres');
   }
 
   update(id: number, updateMovieDto: UpdateMovieDto) {

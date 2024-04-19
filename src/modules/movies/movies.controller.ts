@@ -3,6 +3,8 @@ import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { QuerySearchVideoDto } from '../videos/dto/search-video.dto';
+import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
+import { Types } from 'mongoose';
 
 @Controller('movies')
 export class MoviesController {
@@ -29,8 +31,8 @@ export class MoviesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.moviesService.findOne(+id);
+  findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
+    return this.moviesService.findOne(id);
   }
 
   @Patch(':id')
