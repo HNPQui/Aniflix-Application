@@ -6,13 +6,15 @@ export class ReverseProxyMiddleware implements NestMiddleware {
     private proxy = createProxyMiddleware({
         target: 'https://api.jikan.moe',
         changeOrigin: true, // Needed for virtual hosted sites
+        secure: false,
+        logLevel: 'debug',
         pathRewrite: {
             '^/jikan': '/v4', // Rewrite path from /jikan to /v4
         },
         onProxyReq: (proxyReq, req, res) => {
-            console.log(
-                `[NestMiddleware]: Proxying ${req.method} request originally made to '${req.originalUrl}'...`
-            );
+            // console.log(
+            //     `[NestMiddleware]: Proxying ${req.method} request originally made to '${req.originalUrl}'...`
+            // );
         },
     });
 
