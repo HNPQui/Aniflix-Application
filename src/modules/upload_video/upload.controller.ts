@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseIntPipe, Query } from '@nestjs/common';
 import { UploadVideoService } from './upload.service';
 import { CreateUploadVideoDto } from './dto/create-upload.dto';
 import { UpdateUploadVideoDto } from './dto/update-upload.dto';
@@ -6,6 +6,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 import { Types } from 'mongoose';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import * as fs from 'fs';
 
 @Controller("upload")
 export class UploadVideoController {
@@ -27,7 +29,27 @@ export class UploadVideoController {
   }
 
   @Post('video/:id')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: (req, file, cb) => {
+        let path = 'public/uploads';
+        let { id: videoId } = req.params;
+        if (videoId) {
+          path += `/${videoId}`;
+        }
+        if (!fs.existsSync(path)) {
+          fs.mkdirSync(path, { recursive: true });
+        }
+        cb(null, path);
+      },
+      filename: (req, file, cb) => {
+        let { ep } = req.query;
+        const fileExtName = file.mimetype.split('/')[1];
+        const randomName = ep || Date.now() + '_' + Math.round(Math.random() * 1e5);
+        cb(null, `${randomName}.${fileExtName}`);
+      }
+    })
+  }))
   uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -37,16 +59,13 @@ export class UploadVideoController {
       }),
     ) file: Express.Multer.File,
     @Param('id', ParseMongoIdPipe) videoId: Types.ObjectId,
-    ) {
+    @Query('ep', ParseIntPipe) ep: number
+  ) {
     if (!file) {
       return "File upload failed"
     }
-    this.uploadVideoService.convertToHls(file , videoId, () => {
-      console.log('done');
-    });
-    console.log(file);
-    return "File uploaded successfully"
+    return this.uploadVideoService.updateEpisodes(videoId, file.filename, ep);
 
+    
   }
-
 }

@@ -3,11 +3,13 @@ import { Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export class ReverseProxyMiddleware implements NestMiddleware {
+    TIMEOUT = 60 * 1000;
     private proxy = createProxyMiddleware({
         target: 'https://api.jikan.moe',
         changeOrigin: true, // Needed for virtual hosted sites
-        secure: false,
         logLevel: 'debug',
+        proxyTimeout: this.TIMEOUT,
+        timeout: this.TIMEOUT,
         pathRewrite: {
             '^/jikan': '/v4', // Rewrite path from /jikan to /v4
         },
@@ -17,6 +19,7 @@ export class ReverseProxyMiddleware implements NestMiddleware {
             // );
         },
     });
+    
 
     constructor() { }
 

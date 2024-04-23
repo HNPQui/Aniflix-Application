@@ -27,6 +27,12 @@ export class Movie {
     type: string;
 
     @Prop({
+        type: [String],
+        default: []
+    })
+    list: string[]
+
+    @Prop({
         default: 'FINISHED',
         enum: ['PENDING', 'FINISHED']
     })

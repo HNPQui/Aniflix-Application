@@ -3,10 +3,18 @@ import { UploadVideoService } from './upload.service';
 import { UploadVideoController } from './upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Movie, MovieSchema } from '../movies/movie.schema';
 
 @Module({
   // import 
-  imports:[
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Movie.name,
+        schema: MovieSchema,
+      }
+    ]),
     MulterModule.register({
       storage: diskStorage({
         destination: (req, file, cb) => {
@@ -23,4 +31,4 @@ import { diskStorage } from 'multer';
   controllers: [UploadVideoController],
   providers: [UploadVideoService],
 })
-export class UploadVideoModule {}
+export class UploadVideoModule { }

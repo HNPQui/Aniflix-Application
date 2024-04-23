@@ -4,14 +4,15 @@ import { TransformInterceptor } from './interceptors/response-transform.intercep
 import { AllExceptionsFilter } from './filters/http-exception.filter';
 import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { JwtAuthGuard } from './modules/auth/auth.guard';
 import { ConfigService } from '@nestjs/config';
-
+import * as bodyParser from 'body-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const httpAdapter = app.get(HttpAdapterHost);
 
+  // app.use(bodyParser.json())
+  // app.use(bodyParser.urlencoded({ extended: true }))
   app.enableCors({
     origin: '*'
   });

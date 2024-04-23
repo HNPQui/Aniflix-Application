@@ -1,33 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Model, Types, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
 const ffmpeg = require('fluent-ffmpeg');
 import * as fs from 'fs';
+import { InjectModel } from '@nestjs/mongoose';
+import { Movie } from '../movies/movie.schema';
 
 @Injectable()
 export class UploadVideoService {
-  convertToHls(file: Express.Multer.File, videoId: Types.ObjectId, onEnd: () => void){
-    // const segmentPath = './videos/' + videoId;
-    // fs.mkdirSync(segmentPath);
-    // ffmpeg().input(file.path) //input file
-    //   .format('hls') //format
-    //   .videoCodec('libx264') //high quality
-    //   .audioCodec('aac') //audio quality
-    //   .outputOptions([
-    //     '-preset veryfast', // encoding speed
-    //     '-sc_threshold 0', // set threshold for scene change detection
-    //     '-hls_time 30', // 30 second segment duration
-    //     '-hls_list_size 0', // Max number of playlist entries 0 means all
-    //     `-hls_segment_filename ${segmentPath}/output_%03d.ts`
-    //   ]).on('end', () => {
-    //     onEnd();
-    //   }).on('error', (err, stdout, stderr) => {
-    //     if (err) {
-    //       console.log(err.message);
-    //       console.log("stdout:\n" + stdout);
-    //       console.log("stderr:\n" + stderr);
-    //     }
-    //   }).save(segmentPath + '/playlist.m3u8');
-    return file;
+  constructor(
+    @InjectModel(Movie.name) private movieModel: Model<Movie>,
+  ) { }
+  updateEpisodes(videoId: Types.ObjectId, fileName: string, episodes: number) {
+    var updateQuery = {};
+    updateQuery["list." + episodes] = fileName;
+    return this.movieModel.updateOne({ _id: videoId }, {
+      $set: updateQuery
+    });
   }
-
 }
