@@ -8,15 +8,14 @@ import * as fs from 'fs';
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) { }
 
-  @HttpCode(200)
   @Post()
+  @HttpCode(200)
   create(@Body() createInvoiceDto: any) {
     const dto: CreateInvoiceDto = {
       ...createInvoiceDto.data
     }
 
-    fs.writeFileSync('createInvoiceDto.json', JSON.stringify(dto));
-
+    fs.writeFileSync('createInvoiceDto.json', JSON.stringify(createInvoiceDto));
     return this.invoicesService.create(dto);
   }
 
