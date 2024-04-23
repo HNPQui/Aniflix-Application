@@ -3,8 +3,7 @@ import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { QueryInvoiceDto } from './dto/query-invoice.dto';
-import { IsDate } from 'class-validator';
-
+import * as fs from 'fs';
 @Controller('invoices')
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) { }
@@ -15,7 +14,9 @@ export class InvoicesController {
       ...createInvoiceDto.data
     }
 
-    return this.invoicesService.create(createInvoiceDto);
+    fs.writeFileSync('createInvoiceDto.json', JSON.stringify(dto));
+
+    return this.invoicesService.create(dto);
   }
 
   @Get()
