@@ -4,9 +4,11 @@ import { InvoicesController } from './invoices.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Invoice, InvoiceSchema } from './invoice.shema';
 import { User, UserSchema } from 'src/schemas/user.schema';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forFeature([
       {
         name: Invoice.name,

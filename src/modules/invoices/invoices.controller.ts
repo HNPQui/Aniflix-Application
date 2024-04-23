@@ -3,7 +3,6 @@ import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { QueryInvoiceDto } from './dto/query-invoice.dto';
-import * as fs from 'fs';
 @Controller('invoices')
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) { }
@@ -14,14 +13,17 @@ export class InvoicesController {
     const dto: CreateInvoiceDto = {
       ...createInvoiceDto.data
     }
-
-    fs.writeFileSync('createInvoiceDto.json', JSON.stringify(createInvoiceDto));
     return this.invoicesService.create(dto);
   }
 
   @Get()
   findAll(@Query() query: QueryInvoiceDto) {
     return this.invoicesService.findAll(query);
+  }
+
+  @Get('check/:id')
+  check(@Param('id') id: string) {
+    return this.invoicesService.check(id);
   }
 
   @Get()

@@ -6,12 +6,16 @@ import { FilterQuery, Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { QueryInvoiceDto } from './dto/query-invoice.dto';
 import { InjectModel } from '@nestjs/mongoose';
+import { HttpService } from '@nestjs/axios';
+import { first, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class InvoicesService {
+
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    @InjectModel(Invoice.name) private invoiceModel: Model<Invoice>
+    @InjectModel(Invoice.name) private invoiceModel: Model<Invoice>,
+    private readonly httpService: HttpService
   ) { }
 
   async create(data: CreateInvoiceDto) {
@@ -19,15 +23,36 @@ export class InvoicesService {
 
     await this.invoiceModel.create({
       ...data,
-      dateTime: new Date(data.dateTime),
+      dateTime: new Date(data.dateTime).toISOString(),
       user: user?._id,
       status: user ? 'PAID' : 'MEMBER_NOT_FOUND'
     });
 
-
     return {
       success: true
     }
+  }
+
+  async check(id: string) {
+    const rq = this.httpService.get(`https://api-merchant.payos.vn/v2/payment-requests/${id}`, {
+      headers: {
+        'x-client-id': '4ea46f72-05a0-43a3-b88c-85e79bb16fe5',
+        'x-api-key': '7b09459f-d371-427c-a673-50442c1f421a'
+      }
+    });
+    const res = await firstValueFrom(rq);
+    const { status, orderCode } = res.data?.data;
+    console.log("check", status, orderCode);
+    if (!status || !orderCode) {
+      return 'NOT_FOUND';
+    }
+    if (status === 'PAID') {
+      const invoice = await this.invoiceModel.findOne({ orderCode }).exec();
+      if (invoice) {
+        return invoice.status;
+      }
+    }
+    return status;
   }
 
   //thông kê doanh thu theo thời gian hôm nay, tuần này, tháng này
