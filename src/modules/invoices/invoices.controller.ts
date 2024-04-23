@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
@@ -8,6 +8,7 @@ import * as fs from 'fs';
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) { }
 
+  @HttpCode(200)
   @Post()
   create(@Body() createInvoiceDto: any) {
     const dto: CreateInvoiceDto = {
