@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 export class CreateInvoiceDto {
     orderCode: number;
     amount: number;
-    dateTime: Date;
+    transactionDateTime: Date;
     description: string;
     counterAccountBankName: string;
     counterAccountNumber: string;

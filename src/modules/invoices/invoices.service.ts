@@ -19,11 +19,12 @@ export class InvoicesService {
   ) { }
 
   async create(data: CreateInvoiceDto) {
+
     const user: UserDocument = await this.userModel.findOne({ username: data.description }).exec();
 
     await this.invoiceModel.create({
       ...data,
-      dateTime: new Date(data.dateTime).toISOString(),
+      dateTime: new Date(data.transactionDateTime),
       user: user?._id,
       status: user ? 'PAID' : 'MEMBER_NOT_FOUND'
     });
@@ -41,8 +42,8 @@ export class InvoicesService {
       }
     });
     const res = await firstValueFrom(rq);
-    const { status, orderCode } = res.data?.data;
-    console.log("check", status, orderCode);
+    console.log("check", id, "=", res.data);
+    const { status, orderCode } = res.data?.data || {};
     if (!status || !orderCode) {
       return 'NOT_FOUND';
     }

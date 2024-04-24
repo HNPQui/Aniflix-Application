@@ -50,6 +50,7 @@ export class CommentsService {
     }, projection).sort({ updatedAt: -1 }) // sắp xếp theo thời gian tạo mới nhất
       .skip((page - 1) * limit) //skip the first n items
       .limit(limit) //limit the number of items returned
+      .populate("comments.userId","name picture -_id") //populate the userId field with the username and avatar fields of the user
       .lean();;
   }
 

@@ -18,7 +18,9 @@ export class MoviesService {
   }
 
   findTop(query: QuerySearchVideoDto) {
-    const filterQuery: FilterQuery<Movie> = {};
+    const filterQuery: FilterQuery<Movie> = {
+      airing: false
+    };
     const limit = query.limit || 10;
     const page = query.page || 1;
     if (query.type) {
@@ -27,7 +29,7 @@ export class MoviesService {
     console.log("findTop", query, filterQuery);
     return this.movieModel.find(filterQuery)
       .sort({ [query.filter]: -1 })
-      .skip((page - 1) * limit).limit(limit).lean();
+      .skip((page - 1) * limit).limit(limit).populate("genres").lean();
 
   }
 
@@ -36,7 +38,9 @@ export class MoviesService {
   }
 
   findAll() {
-    return this.movieModel.find().populate('genres');
+    return this.movieModel.find({
+      airing: false
+    }).populate('genres');
   }
 
   findOne(id: Types.ObjectId) {
