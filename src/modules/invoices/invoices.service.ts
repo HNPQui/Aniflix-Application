@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { Invoice } from './invoice.shema';
@@ -20,7 +20,13 @@ export class InvoicesService {
 
   async create(data: CreateInvoiceDto) {
 
-    const user: UserDocument = await this.userModel.findOne({ username: data.description }).exec();
+    console.log("CreateInvoiceDto", data)
+    let split = data.description?.split(' ');
+    if (!split || split.length < 2) {
+      throw new HttpException('Nội dung chuyển khoản không hợp lệ', 400);
+    }
+    const username = split[1];
+    const user: UserDocument = await this.userModel.findOne({ username }).exec();
 
     await this.invoiceModel.create({
       ...data,

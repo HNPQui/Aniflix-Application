@@ -8,6 +8,20 @@ import { QuerySearchVideoDto } from '../videos/dto/search-video.dto';
 
 @Injectable()
 export class MoviesService {
+  findSchedules() {
+    return this.movieModel.find({
+      airing: true,
+      "aired.from": {
+        $lte: new Date()
+      }
+    }).populate('genres');
+  }
+
+  findNow() {
+    return this.movieModel.find({
+      airing: true,
+    }).populate('genres');
+  }
 
   constructor(
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
@@ -36,6 +50,7 @@ export class MoviesService {
   search(dto: QuerySearchVideoDto) {
     return this.movieModel.find({ title: { $regex: dto.keyword, $options: 'i' } });
   }
+
 
   findAll() {
     return this.movieModel.find({

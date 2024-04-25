@@ -24,6 +24,16 @@ export class MoviesController {
   findAll() {
     return this.moviesService.findAll();
   }
+  @Get("schedules")
+  findSchedules() {
+    return this.moviesService.findSchedules();
+  }
+
+  @Get("now")
+  findNow() {
+    return this.moviesService.findNow();
+  }
+
 
   @Get("top")
   findTop(@Query() query : QuerySearchVideoDto) {

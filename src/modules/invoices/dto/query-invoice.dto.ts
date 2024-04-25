@@ -1,21 +1,20 @@
 import { Optional } from "@nestjs/common";
 import { Transform } from "class-transformer";
-import { IsIn, IsString } from "class-validator";
+import { IsIn, IsOptional } from "class-validator";
 import { Types } from "mongoose";
 
 export class QueryInvoiceDto {
-    @Optional()
-    @IsString()
+    @IsOptional()
     @IsIn(['PAID', 'MEMBER_NOT_FOUND'], { message: 'status must be either PAID or MEMBER_NOT_FOUND' })
     status?: string;
 
 
-    @Optional()
+    @IsOptional()
     timeFrom?: Date;
 
-    @Optional()
+    @IsOptional()
     timeTo?: Date;
 
-    @Optional()
+    @IsOptional()
     username?: string;
 }
