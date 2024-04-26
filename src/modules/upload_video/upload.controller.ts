@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseIntPipe, Query } from '@nestjs/common';
 import { UploadVideoService } from './upload.service';
-import { CreateUploadVideoDto } from './dto/create-upload.dto';
-import { UpdateUploadVideoDto } from './dto/update-upload.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
@@ -26,6 +24,15 @@ export class UploadVideoController {
       return "File upload failed"
     }
     return file;
+  }
+
+  @Post("import")
+  importUrl(@Body() body: {
+    id: string,
+    url: string,
+    ep: number
+  }) {
+    return this.uploadVideoService.importUrl(body.id, body.url, body.ep);
   }
 
   @Post('video/:id')
@@ -66,6 +73,6 @@ export class UploadVideoController {
     }
     return this.uploadVideoService.updateEpisodes(videoId, file.filename, ep);
 
-    
+
   }
 }

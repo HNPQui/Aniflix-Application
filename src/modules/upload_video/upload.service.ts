@@ -10,9 +10,19 @@ export class UploadVideoService {
   constructor(
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
   ) { }
+
   updateEpisodes(videoId: Types.ObjectId, fileName: string, episodes: number) {
     var updateQuery = {};
     updateQuery["list." + episodes] = fileName;
+    return this.movieModel.updateOne({ _id: videoId }, {
+      $set: updateQuery
+    });
+  }
+
+  importUrl(id: string, url: string, ep: number) {
+    let videoId = new Types.ObjectId(id);
+    let updateQuery = {};
+    updateQuery["list." + ep] = url;
     return this.movieModel.updateOne({ _id: videoId }, {
       $set: updateQuery
     });
