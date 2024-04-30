@@ -14,3 +14,4 @@ export * from './movies/movies.module';
 export * from './mailer/mailer.module';
 export * from './invoices/invoices.module';
 export * from './notifications/notifications.module';
+export * from './tasks/tasks.module';

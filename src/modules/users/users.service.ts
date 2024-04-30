@@ -105,8 +105,6 @@ export class UsersService {
     return this.userModel.findOne(query, projection || { password: 0 });
   }
 
-
-
   async fcm(id: Types.ObjectId, device_token: string) {
     const { fcm_token } = await this.userModel.findByIdAndUpdate(id, {
       $addToSet: {

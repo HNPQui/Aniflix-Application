@@ -20,10 +20,9 @@ export class CommentsController {
 
   @Get()
   findAll(
-    @Query('videoId', ParseMongoIdPipe) videoId: Types.ObjectId,
-    @Query('page', ParseIntPipe) page: number = 1
+    @Query('videoId', ParseMongoIdPipe) videoId: Types.ObjectId
   ) {
-    return this.commentsService.findAll(videoId, page, 1);
+    return this.commentsService.findAll(videoId);
   }
 
   // @Get(':id')

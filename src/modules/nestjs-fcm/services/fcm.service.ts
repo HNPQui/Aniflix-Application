@@ -28,12 +28,13 @@ export class FcmService {
   }
 
   async sendNotification(
-    deviceIds: Array<string>,
     payload: firebaseAdmin.messaging.MessagingPayload,
     silent: boolean,
+    topic?: string,
+    deviceIds?: Array<string>,
     imageUrl?: string
   ) {
-    if (deviceIds.length == 0) {
+    if (!topic && deviceIds.length == 0) {
       throw new Error('You provide an empty device ids list!');
     }
 
@@ -45,14 +46,14 @@ export class FcmService {
       });
     }
 
-    const body: firebaseAdmin.messaging.MulticastMessage = {
-      tokens: deviceIds,
+    const body: firebaseAdmin.messaging.TopicMessage = {
       data: payload?.data,
       notification: {
         title: payload?.notification?.title,
         body: payload?.notification?.body,
         imageUrl
       },
+      topic,
       apns: {
         payload: {
           aps: {

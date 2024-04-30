@@ -16,6 +16,12 @@ export class Notification {
     @Prop()
     content: string;
 
+    @Prop({
+        type: Date,
+        default: null
+    })
+    schedule: Date;
+
     @Prop()
     url: string;
 

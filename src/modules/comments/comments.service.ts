@@ -34,7 +34,7 @@ export class CommentsService {
     return true
   }
 
-  findAll(videoId: Types.ObjectId, page: number = 1, limit: number = 1) {
+  async findAll(videoId: Types.ObjectId) {
     const projection = {
       comments: {
         $filter: {
@@ -45,13 +45,18 @@ export class CommentsService {
         }
       }
     }
-    return this.bucketCommentModel.find({
+    const doc = await this.bucketCommentModel.find({
       videoId,
     }, projection).sort({ updatedAt: -1 }) // sắp xếp theo thời gian tạo mới nhất
-      .skip((page - 1) * limit) //skip the first n items
-      .limit(limit) //limit the number of items returned
-      .populate("comments.userId","name picture -_id") //populate the userId field with the username and avatar fields of the user
-      .lean();;
+      .populate("comments.userId", "name picture -_id") //populate the userId field with the username and avatar fields of the user
+      .lean().exec();
+    const list = [];
+    for (const comment of doc) {
+      for (const item of comment.comments) {
+        list.push(item);
+      }
+    }
+    return list;
   }
 
   findOne(id: string) {

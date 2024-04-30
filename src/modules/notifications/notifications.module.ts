@@ -4,6 +4,7 @@ import { NotificationsController } from './notifications.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NotificationSchema, Notification } from './notification.schema';
 import { FcmModule } from '../nestjs-fcm';
+import { TasksService } from '../tasks/tasks.service';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { FcmModule } from '../nestjs-fcm';
     ])
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService],
+  providers: [NotificationsService, TasksService],
   exports: [NotificationsService]
 })
 export class NotificationsModule { }

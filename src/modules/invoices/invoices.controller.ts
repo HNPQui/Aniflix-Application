@@ -17,8 +17,8 @@ export class InvoicesController {
   }
 
   @Get()
-  findAll(@Query() query: QueryInvoiceDto) {
-    return this.invoicesService.findAll(query);
+  findAll() {
+    return this.invoicesService.findAll();
   }
 
   @Get('check/:id')

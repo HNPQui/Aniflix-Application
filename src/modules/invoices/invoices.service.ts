@@ -2,12 +2,11 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { Invoice } from './invoice.shema';
-import { FilterQuery, Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { QueryInvoiceDto } from './dto/query-invoice.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { HttpService } from '@nestjs/axios';
-import { first, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class InvoicesService {
@@ -106,29 +105,17 @@ export class InvoicesService {
 
     return {
       total,
-      totalPaid : totalPaid[0]?.total || 0
+      totalPaid: totalPaid[0]?.total || 0
     }
   }
 
-  findAll(query: QueryInvoiceDto) {
-    const filter: FilterQuery<Invoice> = {};
-    if (query.status) {
-      filter.status = query.status;
-    }
-    if (query.timeFrom && query.timeTo) {
-      filter.dateTime = {
-        $gte: query.timeFrom,
-        $lte: query.timeTo
-      }
-    }
-
-    if (query.username) {
-      filter['user.username'] = query.username;
-    }
-    return this.invoiceModel.find(query).populate({
+  findAll() {
+    return this.invoiceModel.find().populate({
       path: 'user',
       select: 'username name'
-    });
+    }).sort({
+      dateTime: -1
+    }).lean();
   }
 
   findOne(id: number) {

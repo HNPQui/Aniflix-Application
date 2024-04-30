@@ -5,6 +5,7 @@ import { HasRoles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { ParseMongoIdPipe } from 'src/pipes/mongoid-validation.pipe';
 import { Types } from 'mongoose';
+import { NotificationDocument } from './notification.schema';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -21,9 +22,17 @@ export class NotificationsController {
     return this.notificationsService.findAll(req.user.sub);
   }
 
+  @Get("push")
+  pushNotification(createNotificationDto: CreateNotificationDto) {
+    return this.notificationsService.pushNotificationInTopic(createNotificationDto, "all");
+  }
+
   @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
-    return "This action returns a #${id} notification"
+  async trigger(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
+
+    let notification: NotificationDocument = await this.notificationsService.findOne(id);
+    if (!notification) return "Notification not found"
+    return this.notificationsService.pushNotificationInTopic(notification, "all");
   }
 
   @Patch(':id')
