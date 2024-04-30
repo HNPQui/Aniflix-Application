@@ -1,9 +1,24 @@
 import { Module } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationsController } from './notifications.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { NotificationSchema, Notification } from './notification.schema';
+import { FcmModule } from '../nestjs-fcm';
 
 @Module({
+  imports: [
+    FcmModule.forRoot({
+      firebaseSpecsPath: 'src/firebase.config.json',
+    }),
+    MongooseModule.forFeature([
+      {
+        name: Notification.name,
+        schema: NotificationSchema
+      }
+    ])
+  ],
   controllers: [NotificationsController],
   providers: [NotificationsService],
+  exports: [NotificationsService]
 })
-export class NotificationsModule {}
+export class NotificationsModule { }

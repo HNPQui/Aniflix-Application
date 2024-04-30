@@ -11,6 +11,22 @@ export class FcmService {
     private readonly logger: Logger,
   ) { }
 
+  subscribeToTopic(deviceIds: Array<string>, topic: string) {
+    if (deviceIds.length == 0) {
+      return null;
+    }
+
+    if (firebaseAdmin.apps.length === 0) {
+      firebaseAdmin.initializeApp({
+        credential: firebaseAdmin.credential.cert(
+          this.fcmOptionsProvider.firebaseSpecsPath,
+        ),
+      });
+    }
+
+    return firebaseAdmin.messaging().subscribeToTopic(deviceIds, topic);
+  }
+
   async sendNotification(
     deviceIds: Array<string>,
     payload: firebaseAdmin.messaging.MessagingPayload,

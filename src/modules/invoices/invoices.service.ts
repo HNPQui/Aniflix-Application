@@ -63,35 +63,30 @@ export class InvoicesService {
   }
 
   //thông kê doanh thu theo thời gian hôm nay, tuần này, tháng này
-  async statisticsByTime(timeFrom: Date, timeTo: Date) {
+  async statisticsByTime() {
     const total = await this.invoiceModel.aggregate([
       {
-        $match: {
+        $sort: {
+          dateTime: -1
+        }
+      }, {
+        $limit: 7
+      }, {
+        $project: {
           dateTime: {
-            $gte: timeFrom,
-            $lte: timeTo
-          }
+            $dateToString: {
+              date: "$dateTime",
+              format: "%d-%m-%Y",
+            }
+          },
+          amount: 1
         }
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$amount' }
-        }
-      },
-      {
-        $unwind: '$total'
       }
-
     ]);
 
     const totalPaid = await this.invoiceModel.aggregate([
       {
         $match: {
-          dateTime: {
-            $gte: timeFrom,
-            $lte: timeTo
-          },
           status: 'PAID'
         }
       },
@@ -102,42 +97,17 @@ export class InvoicesService {
         }
       },
       {
-        $unwind: '$total'
-      }
-    ]);
-
-    const totalMemberNotFound = await this.invoiceModel.aggregate([
-      {
-        $match: {
-          dateTime: {
-            $gte: timeFrom,
-            $lte: timeTo
-          },
-          status: 'MEMBER_NOT_FOUND'
+        $project: {
+          _id: 0,
+          total: 1
         }
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$amount' }
-        }
-      },
-      {
-        $unwind: '$total'
       }
     ]);
 
     return {
       total,
-      totalPaid,
-      totalMemberNotFound
+      totalPaid : totalPaid[0]?.total || 0
     }
-
-    // return {
-    //   total: total[0]?.total || 0,
-    //   totalPaid: totalPaid[0]?.total || 0,
-    //   totalMemberNotFound: totalMemberNotFound[0]?.total || 0
-    // }
   }
 
   findAll(query: QueryInvoiceDto) {
@@ -155,8 +125,10 @@ export class InvoicesService {
     if (query.username) {
       filter['user.username'] = query.username;
     }
-    console.log("findAllInvoce", filter);
-    return this.invoiceModel.find(query).populate('user');
+    return this.invoiceModel.find(query).populate({
+      path: 'user',
+      select: 'username name'
+    });
   }
 
   findOne(id: number) {

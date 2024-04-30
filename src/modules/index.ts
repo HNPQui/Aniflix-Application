@@ -13,3 +13,4 @@ export * from './genres/genres.module';
 export * from './movies/movies.module';
 export * from './mailer/mailer.module';
 export * from './invoices/invoices.module';
+export * from './notifications/notifications.module';

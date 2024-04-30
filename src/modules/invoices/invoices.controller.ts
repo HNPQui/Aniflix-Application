@@ -26,12 +26,9 @@ export class InvoicesController {
     return this.invoicesService.check(id);
   }
 
-  @Get()
-  statisticsByTime(@Query() query: {
-    timeFrom: Date,
-    timeTo: Date
-  }) {
-    return this.invoicesService.statisticsByTime(query.timeFrom, query.timeTo);
+  @Get("statistics")
+  statistics() {
+    return this.invoicesService.statisticsByTime();
   }
 
   @Get(':id')

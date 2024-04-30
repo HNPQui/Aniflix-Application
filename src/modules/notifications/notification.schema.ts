@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { User } from 'src/schemas/user.schema';
 
 export type NotificationDocument = HydratedDocument<Notification>;
 
@@ -14,5 +15,15 @@ export class Notification {
 
     @Prop()
     content: string;
+
+    @Prop()
+    url: string;
+
+    @Prop({
+        type: [Types.ObjectId],
+        ref: User.name,
+        default: []
+    })
+    users: Types.ObjectId[];
 }
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

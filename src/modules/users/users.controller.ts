@@ -63,9 +63,22 @@ export class UsersController {
     });
   }
 
+  @Get("statistics")
+  statistics() {
+    return this.usersService.statistics();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
     return this.usersService.findOne(id);
+  }
+
+  
+
+  @HasRoles(Role.USER)
+  @Get('become-vip')
+  becomeVip(@Req() req){
+    return this.usersService.becomeVip(req.user.sub);
   }
 
 
