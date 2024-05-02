@@ -84,8 +84,6 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-
-
   @HasRoles(Role.USER)
   @Patch()
   update(@Req() req, @Body() updateUserDto: UpdateUserDto) {

@@ -105,7 +105,9 @@ export class UsersService {
 
   ban(id: Types.ObjectId) {
     return this.userModel.findByIdAndUpdate(id, {
-      status: false
+      status: {
+        $not: true
+      }
     })
   }
 

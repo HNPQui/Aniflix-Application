@@ -8,4 +8,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
         code: string,
         expire: Date
     }
+
+    @IsOptional()
+    isPremium?: boolean;
 }
