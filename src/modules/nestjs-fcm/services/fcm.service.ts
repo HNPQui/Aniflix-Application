@@ -3,6 +3,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { FCM_OPTIONS } from '../fcm.constants';
 import { FcmOptions } from '../interfaces/fcm-options.interface';
 import * as firebaseAdmin from 'firebase-admin';
+import { MessagingTopicResponse } from 'firebase-admin/lib/messaging/messaging-api';
 
 @Injectable()
 export class FcmService {
@@ -11,19 +12,23 @@ export class FcmService {
     private readonly logger: Logger,
   ) { }
 
+  initFirebase() {
+    firebaseAdmin.initializeApp({
+      credential: firebaseAdmin.credential.cert(
+        this.fcmOptionsProvider.firebaseSpecsPath
+      ),
+    });
+  }
+
   subscribeToTopic(deviceIds: Array<string>, topic: string) {
     if (deviceIds.length == 0) {
       return null;
     }
 
     if (firebaseAdmin.apps.length === 0) {
-      firebaseAdmin.initializeApp({
-        credential: firebaseAdmin.credential.cert(
-          this.fcmOptionsProvider.firebaseSpecsPath,
-        ),
-      });
+      this.initFirebase();
     }
-
+    console.log("subscribeToTopic=" + topic, deviceIds)
     return firebaseAdmin.messaging().subscribeToTopic(deviceIds, topic);
   }
 
@@ -34,16 +39,12 @@ export class FcmService {
     deviceIds?: Array<string>,
     imageUrl?: string
   ) {
-    if (!topic && deviceIds.length == 0) {
+    if (!topic && deviceIds?.length == 0) {
       throw new Error('You provide an empty device ids list!');
     }
 
     if (firebaseAdmin.apps.length === 0) {
-      firebaseAdmin.initializeApp({
-        credential: firebaseAdmin.credential.cert(
-          this.fcmOptionsProvider.firebaseSpecsPath,
-        ),
-      });
+      this.initFirebase();
     }
 
     const body: firebaseAdmin.messaging.TopicMessage = {
@@ -79,6 +80,15 @@ export class FcmService {
     let failureCount = 0
     let successCount = 0
     const failedDeviceIds = []
+
+    if (!deviceIds) {
+      return firebaseAdmin.messaging().sendToTopic("all", {
+        notification: {
+          body: payload.notification.body,
+          title: payload?.notification?.title,
+        }
+      })
+    }
 
     while (deviceIds.length) {
       try {

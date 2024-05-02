@@ -9,7 +9,7 @@ import { TasksService } from '../tasks/tasks.service';
 @Module({
   imports: [
     FcmModule.forRoot({
-      firebaseSpecsPath: 'src/firebase.config.json',
+      firebaseSpecsPath: 'src/secrets/firebase-adminsdk.json',
     }),
     MongooseModule.forFeature([
       {

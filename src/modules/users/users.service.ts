@@ -11,7 +11,7 @@ export class UsersService {
   async statistics() {
     const day = 24 * 60 * 60 * 1000;
     const week = 7 * 24 * 60 * 60 * 1000;
-    var list = await this.userModel.aggregate([
+    let list = await this.userModel.aggregate([
       {
         $sort: {
           createdAt: -1
@@ -77,10 +77,15 @@ export class UsersService {
   }
 
   becomeVip(sub: any) {
-    let id = new Types.ObjectId(sub);
-    return this.userModel.findByIdAndUpdate(id, {
+    return this.userModel.findByIdAndUpdate(sub, {
       isPremium: true
-    })
+    }, {
+      new: true
+    }).select({
+      password: 0,
+      fcm_token: 0,
+      role: 0
+    }).lean();
   }
 
   constructor(

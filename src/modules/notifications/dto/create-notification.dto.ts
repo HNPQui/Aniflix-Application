@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString, IsUrl } from "class-validator";
+import { IsDate, IsDateString, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreateNotificationDto {
 
@@ -9,10 +9,10 @@ export class CreateNotificationDto {
     content: string;
 
     @IsOptional()
-    @IsDate()
-    schedule: Date;
+    @IsDateString()
+    schedule?: Date;
 
     @IsOptional()
     @IsUrl()
-    url: string;
+    url?: string;
 }

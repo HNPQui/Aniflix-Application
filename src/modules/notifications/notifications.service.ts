@@ -17,11 +17,15 @@ export class NotificationsService {
   async create(createNotificationDto: CreateNotificationDto) {
     let notification: NotificationDocument = await new this.notificationModel(createNotificationDto).save();
 
-    let schedule: Date = new Date(notification.schedule);
-
-    this.tasksService.addCronJob(notification._id.toString(), schedule, () => {
-      this.pushNotificationToAll(notification);
-    });
+    if (notification?.schedule) {
+      this.tasksService.addCronJob(notification._id.toString(), new Date(notification.schedule), async () => {
+        let result = await this.pushNotificationToAll(notification);
+        console.log("scheduled notification", result)
+      });
+    } else {
+      let result = await this.pushNotificationToAll(notification);
+      console.log("notification", result)
+    }
     return true;
   }
 

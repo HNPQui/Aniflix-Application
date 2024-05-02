@@ -67,19 +67,18 @@ export class UsersController {
   statistics() {
     return this.usersService.statistics();
   }
+  
+  @Get('become-vip')
+  @HasRoles(Role.USER)
+  becomeVip(@Req() req) {
+    return this.usersService.becomeVip(req.user.sub);
+  }
 
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
     return this.usersService.findOne(id);
   }
 
-  
-
-  @HasRoles(Role.USER)
-  @Get('become-vip')
-  becomeVip(@Req() req){
-    return this.usersService.becomeVip(req.user.sub);
-  }
 
 
   @HasRoles(Role.USER)
