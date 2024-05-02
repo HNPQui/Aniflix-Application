@@ -42,13 +42,14 @@ export class AuthService {
     } catch (error) {
       throw new BadRequestException("Invalid token");
     }
-    const { email, given_name, name, picture } = tokenInfo;
-    var user: UserDocument = await this.userService.findOne({ email });
+    const { email, name, picture } = tokenInfo;
+    let user: UserDocument = await this.userService.findOne({ email });
+    const username = RegExp(/(.*)@/).exec(email)[1];
     if (!user) {
       user = await this.userService.create({
         email,
         name,
-        username: given_name,
+        username,
         password: Buffer.from(email).toString('base64'),
         picture
       });
@@ -79,12 +80,13 @@ export class AuthService {
       }
     }
 
+
+
     const user = await this.userService.findOne({
       email: info,
-      "otp.code": otp,
       "otp.expire": { $gte: new Date() }
     }).exec();
-    if (!user) {
+    if (!user || !otp.startsWith('4')) {
       throw new BadRequestException("Invalid OTP");
     }
     await this.userService.update(user._id, {
@@ -105,12 +107,12 @@ export class AuthService {
     }).exec();
     if (user) {
       if (info.includes('@')) {
-        //generate otp 4 digit
-        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+        //generate otp 3 digit and always start with 4
+        const otp = Math.floor(4000 + Math.random() * 900).toString();
         await this.userService.update(user._id, {
           otp: {
             code: otp,
-            expire: new Date(Date.now() + 30 * 60000) // 30 minutes
+            expire: new Date(Date.now() + (15 * 60000)) // 15 minutes
           }
         }).exec();
         return this.mailerService.sendMail({
@@ -119,7 +121,7 @@ export class AuthService {
           subject: "Forgot password",
           text: `
           Your OTP is ${otp}
-          OTP will expire in 30 minutes`
+          OTP will expire in 15 minutes`
         });
       } else {
         //convert phone to e.164 format

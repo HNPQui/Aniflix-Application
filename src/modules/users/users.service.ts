@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterQuery, Model, ProjectionType, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/schemas/user.schema';
+import { User } from 'src/schemas/user.schema';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()

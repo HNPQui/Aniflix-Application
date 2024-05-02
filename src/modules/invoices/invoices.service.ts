@@ -5,7 +5,7 @@ import { Invoice } from './invoice.shema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timestamp } from 'rxjs';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -25,7 +25,9 @@ export class InvoicesService {
       throw new HttpException('Nội dung chuyển khoản không hợp lệ', 400);
     }
     const username = split[1];
-    const user: UserDocument = await this.userModel.findOne({ username }).exec();
+    const user: UserDocument = await this.userModel.findOneAndUpdate({ username }, {
+      isPremium: true
+    }).exec();
 
     await this.invoiceModel.create({
       ...data,
@@ -33,6 +35,7 @@ export class InvoicesService {
       user: user?._id,
       status: user ? 'PAID' : 'MEMBER_NOT_FOUND'
     });
+
 
     return {
       success: true
@@ -65,23 +68,44 @@ export class InvoicesService {
   async statisticsByTime() {
     const total = await this.invoiceModel.aggregate([
       {
-        $sort: {
-          dateTime: -1
-        }
-      }, {
-        $limit: 7
-      }, {
-        $project: {
-          dateTime: {
+        $group: {
+          _id: {
             $dateToString: {
               date: "$dateTime",
               format: "%d-%m-%Y",
-            }
+              timezone: "GMT",
+            },
           },
-          amount: 1
+          amount: { $sum: "$amount" },
+        }
+      },
+      {
+        $addFields: {
+          dateTime: "$_id",
+          timestamp: {
+            $toLong: {
+              $dateFromString: {
+                dateString: "$_id"
+              }
+            }
+          }
+        }
+      },
+      {
+        $limit: 10
+      },
+      {
+        $sort: {
+          timestamp: -1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          timestamp: 0
         }
       }
-    ]);
+    ]).exec();
 
     const totalPaid = await this.invoiceModel.aggregate([
       {
