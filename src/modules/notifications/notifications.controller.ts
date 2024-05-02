@@ -16,12 +16,17 @@ export class NotificationsController {
     return this.notificationsService.create(createNotificationDto);
   }
 
+  @Get("all")
+  findAllAdmin() {
+    return this.notificationsService.adminGet();
+  }
+
+
   @Get()
   @HasRoles(Role.USER)
   findAll(@Req() req) {
     return this.notificationsService.findAll(req.user.sub);
   }
-
   @Get("push")
   pushNotification(createNotificationDto: CreateNotificationDto) {
     return this.notificationsService.pushNotificationInTopic(createNotificationDto, "all");
@@ -38,7 +43,7 @@ export class NotificationsController {
   @Patch(':id')
   @HasRoles(Role.USER)
   update(@Req() req, @Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
-    return this.notificationsService.update(id, req.user.sub);
+    return this.notificationsService.update(id, new Types.ObjectId(req.user.sub));
   }
 
   @Delete(':id')

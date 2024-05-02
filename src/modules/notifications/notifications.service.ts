@@ -55,6 +55,24 @@ export class NotificationsService {
     }, false, topic);
   }
 
+
+  adminGet() {
+    return this.notificationModel.aggregate([
+      {
+        $sort: {
+          createdAt: -1
+        }
+      },
+      {
+        $limit: 10
+      }, {
+        $project: {
+          users: 0
+        }
+      }
+    ])
+  }
+
   findAll(id: Types.ObjectId) {
     return this.notificationModel.aggregate([
       {

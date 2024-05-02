@@ -9,7 +9,11 @@ export class User {
     _id: Types.ObjectId;
 
     @Prop({
-        default: "No name"
+        default: "No name",
+        get: (name: string) => {
+
+            return name.toUpperCase();
+        },
     })
     name: string;
 
@@ -52,12 +56,12 @@ export class User {
 
 
     @Prop({
-        type : Object,
+        type: Object,
         default: null
     })
-    otp : {
-        code : string,
-        expire : Date
+    otp: {
+        code: string,
+        expire: Date
     }
 
     @Prop({
@@ -78,4 +82,12 @@ export class User {
     role: Role[];
 
 }
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.path('name').get(function (name) {
+    if (this.isPremium) {
+        return name + ' 👑';
+    } else {
+        return name;
+    }
+})
+export { UserSchema }
