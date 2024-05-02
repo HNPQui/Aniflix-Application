@@ -9,11 +9,7 @@ export class User {
     _id: Types.ObjectId;
 
     @Prop({
-        default: "No name",
-        get: (name: string) => {
-
-            return name.toUpperCase();
-        },
+        default: "No name"
     })
     name: string;
 

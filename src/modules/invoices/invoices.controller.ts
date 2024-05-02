@@ -26,11 +26,6 @@ export class InvoicesController {
     return this.invoicesService.check(id);
   }
 
-  @Get("statistics")
-  statistics() {
-    return this.invoicesService.statisticsByTime();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.invoicesService.findOne(+id);

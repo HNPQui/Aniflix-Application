@@ -65,73 +65,7 @@ export class InvoicesService {
   }
 
   //thông kê doanh thu theo thời gian hôm nay, tuần này, tháng này
-  async statisticsByTime() {
-    const total = await this.invoiceModel.aggregate([
-      {
-        $group: {
-          _id: {
-            $dateToString: {
-              date: "$dateTime",
-              format: "%d-%m-%Y",
-              timezone: "GMT",
-            },
-          },
-          amount: { $sum: "$amount" },
-        }
-      },
-      {
-        $addFields: {
-          dateTime: "$_id",
-          timestamp: {
-            $toLong: {
-              $dateFromString: {
-                dateString: "$_id"
-              }
-            }
-          }
-        }
-      },
-      {
-        $limit: 10
-      },
-      {
-        $sort: {
-          timestamp: -1
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          timestamp: 0
-        }
-      }
-    ]).exec();
-
-    const totalPaid = await this.invoiceModel.aggregate([
-      {
-        $match: {
-          status: 'PAID'
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$amount' }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          total: 1
-        }
-      }
-    ]);
-
-    return {
-      total,
-      totalPaid: totalPaid[0]?.total || 0
-    }
-  }
+  
 
   findAll() {
     return this.invoiceModel.find().populate({
