@@ -80,6 +80,7 @@ export class User {
 }
 const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.path('name').get(function (name) {
+    console.log(name)
     if (this.isPremium) {
         return name + ' 👑';
     } else {

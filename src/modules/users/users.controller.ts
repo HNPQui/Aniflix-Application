@@ -47,6 +47,11 @@ export class UsersController {
     return this.usersService.claim(req.user.sub, point);
   }
 
+  @Get("ban/:id")
+  ban(@Req() req, @Param('id', ParseMongoIdPipe) id: Types.ObjectId) {
+    return this.usersService.ban(id);
+  }
+
   @HasRoles(Role.USER)
   @Post("reset-password")
   resetPassword(@Req() req, @Body("newPassword") password: string) {

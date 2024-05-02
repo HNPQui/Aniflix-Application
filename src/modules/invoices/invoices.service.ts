@@ -26,7 +26,10 @@ export class InvoicesService {
     }
     const username = split[1];
     const user: UserDocument = await this.userModel.findOneAndUpdate({ username }, {
-      isPremium: true
+      isPremium: true,
+      name: {
+        $concat: ["$name", "👑"]
+      }
     }).exec();
 
     await this.invoiceModel.create({
@@ -65,7 +68,7 @@ export class InvoicesService {
   }
 
   //thông kê doanh thu theo thời gian hôm nay, tuần này, tháng này
-  
+
 
   findAll() {
     return this.invoiceModel.find().populate({

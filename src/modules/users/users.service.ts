@@ -78,7 +78,10 @@ export class UsersService {
 
   becomeVip(sub: any) {
     return this.userModel.findByIdAndUpdate(sub, {
-      isPremium: true
+      isPremium: true,
+      name: {
+        $concat: ["$name", "👑"]
+      }
     }, {
       new: true
     }).select({
@@ -98,6 +101,12 @@ export class UsersService {
 
   findAll() {
     return this.userModel.find().sort({ createdAt: -1 });
+  }
+
+  ban(id: Types.ObjectId) {
+    return this.userModel.findByIdAndUpdate(id, {
+      status: false
+    })
   }
 
   claim(userId: Types.ObjectId, point) {
