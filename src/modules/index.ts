@@ -15,3 +15,4 @@ export * from './mailer/mailer.module';
 export * from './invoices/invoices.module';
 export * from './notifications/notifications.module';
 export * from './tasks/tasks.module';
+export * from './statistics/statistics.module';
