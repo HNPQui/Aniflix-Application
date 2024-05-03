@@ -79,9 +79,6 @@ export class UsersService {
   becomeVip(sub: any) {
     return this.userModel.findByIdAndUpdate(sub, {
       isPremium: true,
-      name: {
-        $concat: ["$name", "👑"]
-      }
     }, {
       new: true
     }).select({
